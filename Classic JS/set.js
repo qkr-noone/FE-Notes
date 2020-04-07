@@ -60,6 +60,59 @@
       }
     }
   }
+  /* 
+    Promise.all() 知识点:
+    1. 返回一个 Promise 实例 完成状态是一个数组
+    2. 参数是可迭代对象 （for of）
+    3. 参数是空迭代对象  返回 resolved Promise  => 一个空的数组
+    4. 返回按照传入参数顺序返回结果
+    5. 只要其中一个 Promise reject 就返回这个 reject
+ */
+
+
+  /* Promise.all 的一个简版实现  1 2 3 4 5 */
+  function myAll(iterable) {
+    return new Promise((resolve, reject) => {
+      let index = 0
+      for (const promise of iterable) {
+        const curIndex = index
+        // 异步
+        promise.then(value => {
+          if (anErrorOccurred) {
+            return
+          }
+          // 放入顺序和输入顺序一样
+          result[curIndex] = value
+          // result 此时长度已确定 通过 elementCount 自增去判断
+          // elementCount++
+          if (result.length === curIndex + 1) {
+            resolve(result)
+          }
+        }, error => {
+          if (anErrorOccurred) {
+            return
+          }
+          anErrorOccurred = true
+          reject(error)
+        })
+        index++
+      }
+      if (index === 0) {
+        resolve([])
+        return
+      }
+      // 异步主体体使用的
+      // 此时 index 为参数长度  anErrorOccurred 判断是否有 rejected
+      // let elementCount = 0;
+      let anErrorOccurred = false;
+      const result = new Array(index);
+    })
+  }
+
+  let [c, d] = [Promise.resolve(10), Promise.reject(2)]
+  myAll([c, d]).then(res => {
+    console.log('success', res)
+  }).catch(error => console.log('error', error))
 
   function spawn(genF) {
     return new Promise((resolve, reject) => {
@@ -183,6 +236,26 @@
     Object.setPrototypeOf(subTyep, superType)
   }
 
+  function _inherits(subClass, superClass) {
+    // extend 的继承目标必须是函数或者是 null
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+
+    // 类似于 ES5 的寄生组合式继承，使用 Object.create，设置子类 prototype 属性的 __proto__ 属性指向父类的 prototype 属性
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+
+    // 设置子类的 __proto__ 属性指向父类
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
   // 实现函数 call 方法
   const selfCall = function (context, ...args) {
     let func = this
@@ -193,6 +266,50 @@
     let res = context[caller](...args)
     delete context[caller]
     return res
+  }
+  
+  /*
+    call和apply的模拟实现  https://github.com/mqyqingfeng/Blog/issues/11
+    所以我们模拟的步骤可以分为：
+      将函数设为对象的属性
+      执行该函数
+      删除该函数
+  */
+  Function.prototype.call2 = function (context) {
+    var context = context || window;
+    context.fn = this;
+
+    var args = [];
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      args.push('arguments[' + i + ']');
+    }
+
+    var result = eval('context.fn(' + args + ')');
+
+    delete context.fn
+    return result;
+  }
+  // apply的模拟实现
+  // apply 的实现跟 call 类似，在这里直接给代码
+
+  Function.prototype.apply = function (context, arr) {
+    var context = Object(context) || window;
+    context.fn = this;
+
+    var result;
+    if (!arr) {
+      result = context.fn();
+    }
+    else {
+      var args = [];
+      for (var i = 0, len = arr.length; i < len; i++) {
+        args.push('arr[' + i + ']');
+      }
+      result = eval('context.fn(' + args + ')')
+    }
+
+    delete context.fn
+    return result;
   }
 
   // 图片懒加载 getBoundClientRect 的实现方式
@@ -509,7 +626,7 @@
 
 
 
-  // new 关键字
+  // 实现 new 关键字
   const isComplexDataType = obj =>
     (typeof obj === 'object' || typeof obj === 'function') && obj !== null
   const selfNew = function (fn, ...rest) {
@@ -517,6 +634,32 @@
     let res = fn.apply(instance, rest)
     return isComplexDataType(res) ? res : instance
   }
+
+  // 实现 new 二
+  /* 1. 生成新对象 2. 对象原型指向构造函数的原型 3. 绑定 this 4.返回新对象即实例对象 */
+  /* 参数 Con 接收一个构造函数  args 传入构造函数的参数 */
+
+  // 实现一个 new 操作符
+
+  function reNew() {
+    let obj = {}
+    let Construtor = [].shift.call(arguments)
+    obj.__proto__ = Construtor.prototype
+    let result = Construtor.apply(obj, arguments)
+    // ** 确保 new 出来的是个对象 返回的值是什么就return什么
+    return typeof result === 'object' ? result : obj
+  }
+  function FunTest(name, age) {
+    this.name = name
+    this.age = age
+  }
+  FunTest.prototype.findAge = function () {
+    console.log(12)
+    return 1
+  }
+  const testCons = reNew(FunTest, 'sdafd', 12)
+  console.log(testCons.findAge());
+
 
   // 单例模式  通过 ES6 的 Proxy 拦截构造函数的执行方法来实现的单例模式
   function proxy(func) {
@@ -589,7 +732,7 @@
     如何实现一个插件
       调用 apply 函数传入 compiler 对象
       通过 compiler 对象监听事件
-   */
+  */
 
   //  比如你想实现一个编译结束退出命令的插件
   class BuildEndPlugin {
@@ -818,4 +961,193 @@
       if (i >= k - 1) res.push(nums[range[0]])
     }
   }
+
+  /*
+    Symbol 原始数据类型 独一无二的值 知识点:
+    https://juejin.im/post/5b1f4c21f265da6e0f70bb19
+    (可以实现)
+    Symbol 函数前不能使用 new 命令 否则报错， 因为生成的Symbol 是一个原始类型的值， 不是对象
+    instanceof 的结果为false
+    如果 Symbol 参数是一个对象， 就会调用该对象的 toString 方法，将其转为字符串，然后才生成一个 Symbol 值
+    Symbol 函数的参数只是表示对当期 Symbol 值的描述， 相同的参数的 Symbol 函数的返回值是不相等
+    Symbol 值可以作为标志符， 用于对象的属性名，可以保证不会出现同名的属性
+    Symbol.for 接受一个字符串参数， 搜索该参数作为名称的 Symbol 值，有则返回 Symbol 值； 否则，就新建并返回一个以该字符串为名称的 Symbol 值
+    Symbol.keyFor() 方法返回一个已登记的 Symbol 类型值的 key
+    (不可实现)
+    Symbol 值通过 Symbol 函数生成，使用 typeof，结果为 'symbol'
+    Symbol 函数可以接受一个字符串作为参数， 表示对 Symbol 实例的描述, 在控制台显示或转为字符串是 比较容易区分
+    Symbol 值不能与其他类型的值进行运算，会报错
+    Symbol 值可以显示转为字符串
+    Symbol 作为属性名，该属性不会出现在 for...in/of 循环中,
+        也不会被 Object.keys()、Object.getOwnPropertyNames()、JSON.stringify() 返回。
+        但是它也不是私有属性，有一个 Object.getOwnPropertySymbols 方法，
+        可以获取指定对象的所有 Symbol 属性名
+  */
+  // 实现一个 Symbol
+  ;(function () {
+    var root = this
+
+    var generateName = (function () {
+      var postfix = 0
+      return function (descString) {
+        postfix++
+        return `@@${descString}_${postfix}`
+      }
+    })()
+
+    var forMap = {}
+
+    var SymbolPolyfill = function Symbol(description) {
+      if (this instanceof SymbolPolyfill) {
+        throw new TypeError('Symbol is not a constructor')
+      }
+
+      var descString = description === undefined ? undefined : String(description)
+
+      var symbol = Object.create({
+        toString: function () {
+          return this.__Name__
+        },
+        valueOf: function () {
+          return this
+        }
+      })
+
+      Object.defineProperties(shmbol, {
+        '__Description__': {
+          value: descString,
+          writable: false,
+          enumerable: false,
+          configurable: false
+        },
+        '__Name__': {
+          value: generateName(descString),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        }
+      })
+      return symbol
+    }
+
+    Object.defineProperties(SymbolPolyfill, {
+      'for': {
+        value: function (description) {
+          var descString = description === undefined ? undefined : String(description)
+          return forMap[descString] ? forMap[descString] : forMap[descString] = SymbolPolyfill(descString)
+        },
+        writable: true,
+        enumerable: false,
+        configurable: true
+      },
+      'keyFor': {
+        value: function (symbol) {
+          for (const key in forMap) {
+            if (forMap[key] === symbol) return key
+          }
+        },
+        writable: true,
+        enumberable: false,
+        configurable: true
+      }
+    })
+
+    root.SymbolPolyfill = SymbolPolyfill
+
+  })()
+
+  // 参照示例
+  function* test() {
+    let a = 10 + 1
+    yield a++
+    yield a
+  }
+  let b = test()
+  console.log(b, b.next())
+  console.log(b.next())
+  console.log(b.next())
+
+  // 实现一个 generator
+  // cb就是编译过来的 test 函数
+  function generator(cb) {
+    return (function () {
+      let obj = { next: 0, stop: function () { } }
+      return {
+        next: function () {
+          let ret = cb(obj)
+          if (ret === undefined) return { value: undefined, done: true }
+          return {
+            value: ret,
+            done: false
+          }
+        }
+      }
+    })()
+  }
+
+
+  /*
+    实现可迭代对象
+    知识点
+    ES6里规定，只要在对象的属性上部署了Iterator接口，
+    具体形式为给对象添加Symbol.iterator属性，此属性指向一个迭代器方法，
+    这个迭代器会返回一个特殊的对象 - 迭代器对象。
+
+    为对象实现一个简单的iterator
+ */
+  let iteraObj = {
+    name: 'starry',
+    age: 12,
+    gender: 'girl'
+  }
+
+  iteraObj[Symbol.iterator] = function () {
+    let values = Object.values(this)
+    let index = 0
+    return {
+      next() {
+        if (index >= values.length) {
+          return {
+            done: true,
+            value: undefined
+          }
+        } else {
+          return {
+            done: false,
+            value: values[index++]
+          }
+        }
+      }
+    }
+  }
+
+  for (const v of iteraObj) {
+    console.log(v)
+  }
+
+  let iterass = [12, 23, 4][Symbol.iterator]()
+  console.log(iterass.next().value)
+  console.log(iterass.next().value)
+
+
+  /* 更优雅的实现方式  Generator 生成器*/
+  let generaObj = {
+    *[Symbol.iterator]() {
+      yield 'hello';
+      yield 'generator'
+    }
+  }
+  for (const v of generaObj) {
+    console.log(v)
+  }
+
+  function timeout(ms) {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, ms, 'done')
+    })
+  }
+  console.log(1)
+  timeout(2000).then(value => console.log(value, 'timeout'))
+  console.log(2)
+
 }
