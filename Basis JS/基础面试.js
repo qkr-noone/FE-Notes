@@ -24,10 +24,22 @@ p2：{ name: 'noone-qkr', age: 18 }`
   通过调用person.age = 26确实改变了p1的值，但随后person变成了另一块内存空间的地址，
   并且在最后将这另外一份内存空间的地址返回，赋给了p2。`
 
+
 console.log('1'.toString())
+
+`其实在这个语句运行的过程中做了这样几件事情：
+var s = new Object('1');
+s.toString();
+s = null;
+复制代码第一步: 创建Object类实例。注意为什么不是String ？ 由于Symbol和BigInt的出现，对它们调用new都会报错，目前ES6规范也不建议用new来创建基本类型的包装类。
+第二步: 调用实例方法。
+第三步: 执行完方法立即销毁这个实例。
+整个过程体现了基本包装类型的性质，而基本包装类型恰恰属于基本数据类型`
+`基本包装类型： String、Number、Boolean`
+
 var str = 'per'
 str.name = 'qkr'
-console.log(str.name, str)
+console.log(str.name, str) // undefined 'per'
 
 
 // 0.1+0.2为什么不等于0.3？
@@ -93,3 +105,32 @@ function is(x, y) {
     return x !== x && y !== y;
   }
 }
+
+`JS 中类型转换有几种
+  JS中，类型转换只有三种：
+  转换成数字
+  转换成布尔值
+  转换成字符串
+`
+
+`对象转原始类型是根据什么流程运行的？
+对象转原始类型，会调用内置的[ToPrimitive]函数，对于该函数而言，其逻辑如下：
+
+1. 如果Symbol.toPrimitive()方法，优先调用再返回
+2. 调用valueOf()，如果转换为原始类型，则返回
+3. 调用toString()，如果转换为原始类型，则返回
+4. 如果都没有返回原始类型，会报错
+`
+var obj = {
+  value: 3,
+  valueOf() {
+    return 4;
+  },
+  toString() {
+    return '5'
+  },
+  [Symbol.toPrimitive]() {
+    return 6 // 打印 7
+  }
+}
+console.log(obj + 1); // 输出7
