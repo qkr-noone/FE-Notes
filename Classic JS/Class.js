@@ -32,14 +32,14 @@ function _inherits(subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
-// 实现函数 call 方法
-const selfCall = function (context, ...args) {
-  let func = this
-  content || (context = window)
-  if (typeof func !== 'function') throw new TypeError('this is not function')
-  let caller = Symbol('caller')
-  context[caller] = func
-  let res = context[caller](...args)
-  delete context[caller]
-  return res
+
+function Parent5() {
+  this.name = 'parent5';
+  this.play = [1, 2, 3];
 }
+function Child5() {
+  Parent5.call(this);
+  this.type = 'child5';
+}
+Child5.prototype = Object.create(Parent5.prototype);
+Child5.prototype.constructor = Child5;

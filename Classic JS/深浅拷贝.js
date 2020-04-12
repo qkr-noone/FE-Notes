@@ -2,7 +2,7 @@
 Object.assign() // 当 object 只有一层的时候，是深拷贝
 Array.prototype.concat()
 Array.prototype.slice()
-
+// ...展开运算符 [...arr] 跟arr.slice()是一样的效果
 /*
   Array的slice和concat方法不修改原数组，只会返回一个浅复制了原数组中的元素的一个新数组
     原数组的元素会按照下述规则拷贝：
@@ -156,3 +156,9 @@ function deepWeakMapCopy(target, map = new WeakMap()) {} // 其他都一样
 
 `性能优化`  // 待续。。。
 `for in 在遍历时效率是非常低的 三种循环for、while、for in的执行效率 while的效率是最好`
+
+`
+更多版本
+深拷贝（尤雨溪版） vuex源码 https://juejin.im/post/5e24590ef265da3e152d27bc#heading-6
+深拷贝（高性能版） https://juejin.im/post/5e24590ef265da3e152d27bc#heading-8
+`

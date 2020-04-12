@@ -61,6 +61,11 @@ type.isObject({}) // true
 type.isNumber(NaN) // true
 console.log(type.isRegExp(/abc/)) // true
 
+const isType = type => target => `[object ${type}]` === Object.prototype.toString.call(target)
+
+const isArray = isType('Array')
+console.log(isArray([1, 2]))
+
 // https: //juejin.im/post/5c6ad9fde51d453c356e37d1#heading-29 测试
 typeof Symbol()
 typeof ''
@@ -351,3 +356,61 @@ var obj = new Proxy({}, {
   }
 })
 
+// 两数之和：返回数组中的两个值 等于 目标值的下标 组成的数组
+let arr1 = [2, 7, 11, 15], target1 = 9
+let arr2 = [2, 75, 7, 15], target2 = 90
+
+// for 循环
+function arrSum(arr, target) {
+  const res = []
+  for (let i = 0; i < arr.length; i++) {
+    const a = target - arr[i]
+    // indexOf 第二个参数：开始查找的位置
+    const index = arr.indexOf(a, i)
+    if (index >= 0) {
+      res.push(i, index)
+    }
+  }
+  return res
+}
+console.log(arrSum(arr1, target1)) // [0, 1]
+console.log(arrSum(arr2, target2)) // [1, 3]
+
+// reduce 解法
+let cb = arr.reduce((res, cur, i) => {
+  const index = arr.findIndex(x => x === target - cur);
+  return res || (!!~index && [i, index])
+}, void 0)
+console.log(cb) // [1, 3]
+
+// Map 哈希? 解法 \Data Structures & Algorithms\LeetCode\1.两数之和.js
+
+var a = 10;
+(function () {
+  console.log(a) // undefined
+  a = 5
+  console.log(window.a) // 10
+  var a = 20;
+  console.log(a) // 20
+})()
+console.log(a) // 10
+
+var a = 10;
+(function () {
+  console.log(a) // 10
+  a = 5
+  console.log(window.a) // 5
+  console.log(a) // 5
+})()
+console.log(a) // 5
+
+var a = 2;
+var func = (function () {
+  var a = 3;
+  return function () {
+    a++;
+    console.log(a)
+  }
+})()
+func(); // 4
+func(); // 5

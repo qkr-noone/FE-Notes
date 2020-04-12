@@ -6,6 +6,10 @@
 `
 
 // 闭包 https://juejin.im/post/5b081f8d6fb9a07a9b3664b6  https://juejin.im/post/5b1fa77451882513ea5cc2ca
+`
+简单理解 本质就是上级作用域内变量的生命周期，因为被下级作用域内引用，而没有被释放。就导致上级作用域内的变量，
+等到下级作用域执行完以后才正常得到释放
+`
 // 作用域 作用域链 https://juejin.im/post/5afb0ae56fb9a07aa2138425
 
 // 原型 原型链

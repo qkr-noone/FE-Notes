@@ -3,6 +3,7 @@ const selfMap = function (fn, context) {
   let arr = Array.prototype.slice.call(this)
   let mappedArr = Array()
   for (let i = 0; i < arr.length; i++) {
+    // hasOwenProperty判断当前下表元素是否存在数组中
     if (!arr.hasOwnProperty(i)) continue
     mappedArr[i] = fn.call(context, arr[i], i, this)
   }

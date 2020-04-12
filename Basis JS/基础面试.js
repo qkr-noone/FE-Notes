@@ -134,3 +134,68 @@ var obj = {
   }
 }
 console.log(obj + 1); // 输出7
+
+
+`forEach中return有效果吗？如何中断forEach循环？
+中断方法：
+
+使用try监视代码块，在需要中断的地方抛出异常。
+
+官方推荐方法（替换方法）：用every和some替代forEach函数。every在碰到return false的时候，中止循环。
+some在碰到return true的时候，中止循环
+`
+let nums = [1, 2, 3]
+nums.forEach((item, index) => {
+  console.log(item)
+  if (item === 1) {
+    console.log('操作')
+    throw (1233)
+    try {} catch (e) {
+      console.log(1)
+    }
+  }
+})
+
+// JS 中 flat ---数组扁平化
+let ary = [1, [2, [3, [4, 5]]], 6];// -> [1, 2, 3, 4, 5, 6]
+let str = JSON.stringify(ary);
+
+// 普通递归
+let result = []
+let fn = function (ary) {
+  for (let i = 0; i < ary.length; i++) {
+    const item = ary[i];
+    if (Array.isArray(item)) {
+      fn(item)
+    } else {
+      result.push(item)
+    }
+  }
+}
+fn(ary)
+console.log(result)
+
+// ES6 中的 flat
+`
+ary = ary.flat(Infinity)
+`
+// replace + JSON.parse
+`
+let ary = [1, ['2', [3, ['4', 5]]], 6]
+let str = JSON.stringify(ary)
+str = str.replace(/(\[|\])/g, '')
+str = '['+ str +']'
+ary = JSON.parse(str)
+console.log(ary) // [ 1, '2', 3, '4', 5, 6 ]
+`
+// reduce 函数
+let ary = [1, [2, [3, [4, 5]]], 6];
+let flatten = (ary) => ary.reduce((pre, cur) => pre.concat(Array.isArray(cur)? flatten(cur) : cur), [])
+console.log(flatten(ary))
+
+// 扩展运算符
+let ary = [1, ['2', [3, ['4', 5]]], 6]
+// 也可以 ary.some(a => Array.isArray(a))
+while (ary.some(Array.isArray)) { // Array.isArray 是一个函数   some,接收 函数和 this 两个参数
+  ary = [].concat(...ary)
+}

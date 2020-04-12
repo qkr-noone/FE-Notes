@@ -57,3 +57,15 @@ Function.prototype.myCall = function (context = window, ...args) {
   delete context[fn];
   return res;
 }
+
+// 实现函数 call 方法
+const selfCall = function (context, ...args) {
+  let func = this
+  content || (context = window)
+  if (typeof func !== 'function') throw new TypeError('this is not function')
+  let caller = Symbol('caller')
+  context[caller] = func
+  let res = context[caller](...args)
+  delete context[caller]
+  return res
+}
