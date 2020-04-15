@@ -163,7 +163,7 @@ https://user-gold-cdn.xitu.io/2019/10/20/16de955ca89f6091?imageView2/0/w/1280/h/
 怎么去判断原型和实例的这种继承关系呢? 方法一般有两种.
 第一种是使用 instanceof 操作符, 只要用这个操作符来测试实例(instance)与原型链中出现过的构造函数,结果就会返回true.
 第二种是使用 isPrototypeOf() 方法, 同样只要是原型链中出现过的原型, isPrototypeOf() 方法就会返回true.
-console.log(Object.prototype.isPrototypeOf(instance))
+console.log(Parent.prototype.isPrototypeOf(instance))
 `
 // 拓展
 // 继承 -> Class -> new 

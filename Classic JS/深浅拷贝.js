@@ -157,6 +157,44 @@ function deepWeakMapCopy(target, map = new WeakMap()) {} // 其他都一样
 `性能优化`  // 待续。。。
 `for in 在遍历时效率是非常低的 三种循环for、while、for in的执行效率 while的效率是最好`
 
+`我们先使用while来实现一个通用的forEach遍历，
+iterate是遍历的回掉函数，他可以接收每次遍历的value和index两个参数`
+
+// 未验证
+function toforEach(array, iterate) {
+  let index = -1;
+  const length = array.length;
+  while (++index < length) {
+    iterate(array[index], index);
+  }
+  return array;
+}
+
+function clone(target, map = new WeakMap()) {
+  if (typeof target === 'object') {
+    const isArray = Array.isArray(target);
+    let cloneTarget = isArray ? [] : {};
+
+    if (map.get(target)) {
+      return map.get(target);
+    }
+    map.set(target, cloneTarget);
+
+    const keys = isArray ? undefined : Object.keys(target);
+    toforEach(keys || target, (value, key) => {
+      if (keys) {
+        key = value;
+      }
+      cloneTarget[key] = clone2(target[key], map);
+    });
+
+    return cloneTarget;
+  } else {
+    return target;
+  }
+}
+
+
 `
 更多版本
 深拷贝（尤雨溪版） vuex源码 https://juejin.im/post/5e24590ef265da3e152d27bc#heading-6
