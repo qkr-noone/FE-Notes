@@ -12,6 +12,7 @@
 
 https://juejin.im/post/58ec3cc944d90400576a2cdc
 https://github.com/mqyqingfeng/Blog/issues/4
+https://juejin.im/post/58f03a958d6d8100579b74df
 `
 
 // 变量对象（VO）活动对象（AO）
@@ -47,7 +48,7 @@ https://github.com/mqyqingfeng/Blog/issues/4
     2.代码执行阶段
     创建完成之后，就会开始执行代码，这个时候，会完成变量赋值，函数引用，以及执行其他代码。
   }
-  ...侧重点主要是 EC(执行上下文) 的生命周期的第一个阶段，我觉得再执行var foo = 1这句话有点不妥，应该是给foo赋值，应该是执行foo=1这个操作，因为在EC创建阶段var已经被扫描了一遍
+  ...侧重点主要是 EC(执行上下文) 的生命周期的第一个阶段，我觉得再执行 var foo = 1 这句话有点不妥，应该是给foo赋值，应该是执行foo=1这个操作，因为在EC创建阶段var已经被扫描了一遍
 
 Q: VO 和 AO 到底是什么关系
 A: 未进入执行阶段之前，变量对象(VO)中的属性都不能访问！
@@ -113,18 +114,29 @@ https://github.com/mqyqingfeng/Blog/issues/3
 
 函数的创建和激活两个时期来讲解作用域链是如何创建和变化
 
+这是因为函数有一个内部属性 [[scope]]，当函数创建的时候，就会保存所有父变量对象到其中，
+你可以理解 [[scope]] 就是所有父变量对象的层级链， 但是注意：[[scope]] 并不代表完整的作用域链
+
+
 `
 
 // 函数生命周期 https://pic4.zhimg.com/v2-88a513ba2ce27b5b41ec6e188d07b30f_r.jpg
 
 
 // 闭包 https://juejin.im/post/5b081f8d6fb9a07a9b3664b6  https://juejin.im/post/5b1fa77451882513ea5cc2ca
+// https://juejin.im/post/590159d8a22b9d0065c2d918
 `
 简单理解 本质就是上级作用域内变量的生命周期，因为被下级作用域内引用，而没有被释放。就导致上级作用域内的变量，
 等到下级作用域执行完以后才正常得到释放
+
+MDN 对闭包的定义为： 闭包是指那些能够访问自由变量的函数。
+
+那什么是自由变量呢？ 自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。
+
+由此，我们可以看出闭包共有两部分组成： 闭包 = 函数 + 函数能够访问的自由变量
 `
 
-// 原型 原型链
+// 原型 原型链 https://github.com/mqyqingfeng/Blog/issues/2
 `
 1.原型对象和构造函数有何关系？
 在JavaScript中，每当定义一个函数数据类型(普通函数、类)时候，都会天生自带一个prototype属性，这个属性指向函数的原型对象。
@@ -150,7 +162,7 @@ https://user-gold-cdn.xitu.io/2019/10/20/16de955ca89f6091?imageView2/0/w/1280/h/
 确定原型和实例的关系
 怎么去判断原型和实例的这种继承关系呢? 方法一般有两种.
 第一种是使用 instanceof 操作符, 只要用这个操作符来测试实例(instance)与原型链中出现过的构造函数,结果就会返回true.
-第二种是使用 isPrototypeOf() 方法, 同样只要是原型链中出现过的原型,isPrototypeOf() 方法就会返回true.
+第二种是使用 isPrototypeOf() 方法, 同样只要是原型链中出现过的原型, isPrototypeOf() 方法就会返回true.
 console.log(Object.prototype.isPrototypeOf(instance))
 `
 // 拓展

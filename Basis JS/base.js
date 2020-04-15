@@ -414,3 +414,58 @@ var func = (function () {
 })()
 func(); // 4
 func(); // 5
+
+var data = []
+for (var i = 0; i < 3; i++) {
+  data[i] = function () {
+    console.log(i)
+  }
+}
+data[0]()
+data[1]()
+data[2]()
+// 分析
+globalContext = {
+  VO: {
+    data: [...],
+    i: 3
+  }
+}
+// 当执行 data[0] 函数的时候，data[0] 函数的作用域链为：
+data[0]Context = {
+  Scope: [AO, globalContext.VO]
+}
+// data[0]Context 的 AO 并没有 i 值，所以会从 globalContext.VO 中查找，i 为 3，所以打印的结果就是 3
+//改为闭包
+var data = []
+for (var i = 0; i < 3; i++) {
+  data[i] = (function (i) {
+    return function () {
+      console.log(i)
+    }
+  })(i)
+}
+data[0]()
+data[1]()
+data[2]()
+// 当执行到 data[0] 函数之前 全局上下文的 VO
+globalContext = {
+  VO: {
+    data: [...],
+    i: 3
+  }
+}
+// 当执行 data[0] 函数的时候，data[0] 函数的作用域链发生了改变
+data[0]Context = {
+  Scope: [AO, 匿名函数Context.AO, globalContext.VO]
+}
+// 匿名函数执行上下文的AO为：
+匿名函数Context = {
+  AO: {
+    arguments: {
+      0: 0,
+      length: 1
+    },
+    i: 0
+  }
+}
