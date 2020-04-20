@@ -1,4 +1,4 @@
-// 各种继承方式和优缺点 https://juejin.im/post/591523588d6d8100585ba595
+// 各种继承方式和优缺点 https://juejin.im/post/591523588d6d8100585ba595 结合 https://github.com/mqyqingfeng/Blog/issues/2
 
 /* 
 1. 原型链继承  
