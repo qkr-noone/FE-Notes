@@ -199,3 +199,6 @@ let ary = [1, ['2', [3, ['4', 5]]], 6]
 while (ary.some(Array.isArray)) { // Array.isArray 是一个函数   some,接收 函数和 this 两个参数
   ary = [].concat(...ary)
 }
+
+// 更多 面试知识点 https://www.nowcoder.com/discuss/258810?type=post&order=time&pos=&page=3
+// webpack中引入文件的几种写法

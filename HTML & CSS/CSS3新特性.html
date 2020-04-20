@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS3 新特性</title>
+  <!-- 
+    transition：过渡
+    transform：旋转、缩放、移动或者倾斜
+    animation：动画
+    gradient：渐变
+    shadow：阴影
+    border-radius：圆角
+   -->
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      background: linear-gradient(#e1251b, orange);
+      position: relative;
+      transition: all 2s;
+      animation: mymove 5s infinite;
+      margin: 250px;
+      box-shadow: 0 0 2px 2px #f44336;
+    }
+    .box:hover {
+      /* width: 120px; */
+      /* width: 120px; */
+      /* transform: rotate(45deg); */
+      transform: scale(1.5);
+    }
+    @keyframes mymove {
+      0% { left: 0px; }
+      50% { left: 200px; }
+      100% { left: 0px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+</body>
+</html>
