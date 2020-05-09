@@ -1,3 +1,4 @@
+// 参考 https://juejin.im/post/5dac5d82e51d45249850cd20
 // 说出下面运行的结果，解释原因。
 function test(person) {
   person.age = 26
@@ -25,7 +26,7 @@ p2：{ name: 'noone-qkr', age: 18 }`
   并且在最后将这另外一份内存空间的地址返回，赋给了p2。`
 
 
-console.log('1'.toString())
+`console.log('1'.toString()) 为什么可以调用？`
 
 `其实在这个语句运行的过程中做了这样几件事情：
 var s = new Object('1');
@@ -44,7 +45,7 @@ console.log(str.name, str) // undefined 'per'
 
 // 0.1+0.2为什么不等于0.3？
 `0.1和0.2 转成二进制 由于标准位数的限制，后面多余的位数会被截断
-就会出现精度损失，相加后因为浮点数的小数位限制而截断的二进制数字在转为十进制就会变成 0.30000000000000004
+就会出现精度损失，相加后因为浮点数的小数位限制而截断的二进制数字在转为十进制0就会变成 0.30000000000000004
   let a = 0.1
   a.toString(2) => "0.0001100110011001100110011001100110011001100110011001101"
   let b = 0.2
@@ -67,7 +68,7 @@ console.log(typeof console.log) // function
 `对于原始类型 除了 null 都可以调用 typeof 显示正确的类型
 NaN 为 number
 引用数据类型 除了函数之外 都会显示 object
-因此采用 typeof 判断对象数据类型是不合适的，采用 instanceof 会更好，instanceof 的原理是基于原型链的查询，只要处于原型链中，判断永远为true
+因此采用 typeof 判断对象数据类型是不合适的，采用 instanceof 会更好，instanceof 的原理是基于原型链的查询，只要处于原型链中，判断永远为 true
 `
 let num = 1
 console.log(num instanceof Number) // false

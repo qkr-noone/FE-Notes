@@ -19,5 +19,5 @@ let max = Math.pow(2, 53) - 1 // 最大 max  -max 最小
 console.log(max) //9007199254740991
 // 可以通过最大、最小安全整数 取到
 console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
-// 安全整数判断isSafeInteger()
+// 整数判断isSafeInteger()
 console.log('isSafeIntegerisInteer', Number.isSafeInteger(octal))

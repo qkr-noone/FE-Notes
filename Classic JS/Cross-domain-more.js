@@ -122,7 +122,7 @@ app.listen(4000)
 // 如何解决跨域
 // JSONP 利用 <script> 标签没有跨域限制，访问一个地址并且提供一个回调函数来接收数据（get）
 // CORS 需要浏览器和后端同事支持，关键是后端 服务端设置 Access-Control-Allow-Origin 可以开启
-// document.domain 只能用于耳机域名相同情况下，只需要给页面添加 document.domain = 'test.com', 表示耳机域名都相同就可以实现跨越
+// document.domain 只能用于二级域名相同情况下，只需要给页面添加 document.domain = 'test.com', 表示二级域名都相同就可以实现跨越
 // postMessage 用于获取嵌入页面中的第三方页面数据，一个页面发送消息，另一个页面判断来源并接收消息
 
 // 发送消息端
@@ -162,7 +162,7 @@ function jsonp(options) {
     let { url = '', prefix = '__jp', param = 'callback', timeout = 20000, data = {} } = options
     let name = prefix + count++
     let timer
-    // 清楚 script 标签以及注册的全局函数以及超时定时器
+    // 清除 script 标签以及注册的全局函数以及超时定时器
     function cleanup() {
       if (script.parentNode) {
         script.parentNode.removeChild(script)
