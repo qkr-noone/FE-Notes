@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你不知道的css技巧</title>
+  <style>
+    .triangle {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 25px 40px 25px;
+      border-color: transparent transparent #f5817f transparent;
+      margin-bottom: 20px;
+    }
+    .triangle2 {
+      border-width: 40px 25px 0 25px;
+      border-color: #f5817f transparent transparent transparent;
+    }
+    .dotted-line {
+      border: 1px dashed transparent;
+      padding: 18px 16px;
+      background: linear-gradient(white,white) padding-box, repeating-linear-gradient(-45deg,#ccc 0, #ccc .25em,white 0,white .75em);
+    }
+  </style>
+</head>
+<body>
+  <!-- 正三角 -->
+  <div class="triangle"></div>
+  <!-- 倒三角 -->
+  <div class="triangle triangle2"></div>
+  <!-- 虚线效果 -->
+  <div class="dotted-line">
+    具体的虚线的颜色和间距都可以通过repeating-linear-gradient生成的条纹背景去调整。
+  </div>
+</body>
+</html>
