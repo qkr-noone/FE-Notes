@@ -22,6 +22,8 @@
 //   return maxarea;
 // };
 // 双指针
+// 论证： https://leetcode-cn.com/problems/container-with-most-water/solution/container-with-most-water-shuang-zhi-zhen-fa-yi-do/
+// 面积 S(i,j)=min(h[i],h[j])×(j−i)
 // 时间复杂度：O(n)， 一次扫描
 // 空间复杂度：O(1)， 使用恒定的额外空间
 var maxArea = function(height) {
@@ -35,7 +37,7 @@ var maxArea = function(height) {
     if (height[left] < height[right]) {
       left++
     } else {
-      right++
+      right--
     }
   }
   return maxarea;

@@ -18,6 +18,7 @@
  * @return {ListNode}
  */
 // https://mp.weixin.qq.com/s/KMl8ZigBWeL7pOAtzekerw
+// 双指针
 var removeNthFromEnd = function(head, n) {
   if (n === 0) return head
   let p = new ListNode(-1)
@@ -32,6 +33,7 @@ var removeNthFromEnd = function(head, n) {
     b = b.next
   }
   a.next = a.next.next
+  console.log(p, p.next)
   return p.next
   // 去掉 p 新建的队头
   // 删除后返回 p.next，为什么不直接返回 head 呢，因为 head 有可能是被删掉的点
