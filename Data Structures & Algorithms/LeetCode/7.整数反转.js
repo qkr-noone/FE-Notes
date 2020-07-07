@@ -29,7 +29,7 @@ var reverse = function (x) {
   let result = 0;
   while (x !== 0) {
     result = result * 10 + x % 10;
-    x = (x / 10) | 0;
+    x = (x / 10) | 0; // 运算符规则
   }
   return (result | 0) === result ? result : 0;
 };
