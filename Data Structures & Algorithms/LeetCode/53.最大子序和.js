@@ -13,7 +13,7 @@
 
 // 分治法 https://leetcode-cn.com/problems/maximum-subarray/solution/zheng-li-yi-xia-kan-de-dong-de-da-an-by-lizhiqiang/
 // 时间复杂度 O(nlog(n))，空间复杂度 O(log(n))
-var maxSubArray = function (nums) {
+/* var maxSubArray = function (nums) {
   return maxSubArrayDivideWithBorder(nums, 0, nums.length - 1)
 };
 var maxSubArrayDivideWithBorder = function(nums, start, end) {
@@ -21,7 +21,7 @@ var maxSubArrayDivideWithBorder = function(nums, start, end) {
     // 只有一个元素，也就是递归的结束情况
     return nums[start]
   }
-  let center = (start + end) / 2
+  let center = Math.floor((start + end) / 2)
   // 计算左侧子序列最大值
   let leftMax = maxSubArrayDivideWithBorder(nums, start, center)
   // 计算右侧子序列最大值
@@ -38,7 +38,7 @@ var maxSubArrayDivideWithBorder = function(nums, start, end) {
   }
   
   // 计算包含右侧子序列最后一个元素的子序列最大值
-  let rightCrossMax = nums[cnter + 1]
+  let rightCrossMax = nums[center + 1]
   let rightCrossSum = 0
   for (let i = center + 1; i <= end; i++) {
     rightCrossSum += nums[i]
@@ -49,20 +49,20 @@ var maxSubArrayDivideWithBorder = function(nums, start, end) {
   let crossMax = leftCrossMax + rightCrossMax
 
   // 比较三者， 返回最大值
-  return Math.max(crossMax, Math.max(leftMax, rightMax))
-};
+  return Math.max(crossMax, leftMax, rightMax)
+}; */
 
 //动态规划
 // 时间复杂度：O(n)O(n) ，其中 nn 为 nums 数组的长度。我们只需要遍历一遍数组即可求得答案。
 // 空间复杂度：O(1)O(1) 。我们只需要常数空间存放若干变量。
-/* var maxSubArray = function(nums) {
+var maxSubArray = function(nums) {
   let pre = 0, max = nums[0]
   nums.forEach(x => {
     pre = Math.max(pre + x, x)
     max = Math.max(pre, max)
   })
   return max
-}; */
+};
 
 // 贪心法
 // 从左向右迭代，一个个数字加过去，如果 sum < 0, 重新开始找子序串
