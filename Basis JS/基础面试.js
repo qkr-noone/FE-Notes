@@ -196,11 +196,45 @@ console.log(flatten(ary))
 
 // 扩展运算符
 let ary = [1, ['2', [3, ['4', 5]]], 6]
+// 数组深度
+let depth = 1
 // 也可以 ary.some(a => Array.isArray(a))
-while (ary.some(Array.isArray)) { // Array.isArray 是一个函数   some,接收 函数和 this 两个参数
+while (ary.some(Array.isArray)) { // Array.isArray 是一个函数;  some 接收函数和 this 两个参数
+  depth++
+  console.log(depth)
   ary = [].concat(...ary)
 }
+console.log(ary, depth)
 
+// 数组深度
+function getDeepth(array) {
+  let sum = (arr, flag) => {
+    return arr.reduce((total, item) => {
+      let totalDeepth
+      if (Array.isArray(item)) {
+        totalDeepth = sum(item, flag + 1)
+      }
+      return totalDeepth > total ? totalDeepth : total
+    }, flag)
+  }
+  return sum(array, 1)
+}
+console.log(getDeepth([1, ['2', [3, ['4', 5]]], [1], [2, [2]], 6]))
+
+// 数组深度
+function arrs(arr) {
+  let j = 1
+  for (let i in arr) {
+    if (arr[i] instanceof Array) {
+      let nums = arrs(arr[i])
+      if (1 + nums > j) {
+        j = j + nums
+      }
+    }
+  }
+  return j
+}
+console.log(arrs([1, ['2', [3, ['4', 5]]], [1], [2, [2]], 6]))
 // 更多 面试知识点 https://www.nowcoder.com/discuss/258810?type=post&order=time&pos=&page=3
 // webpack中引入文件的几种写法
 
