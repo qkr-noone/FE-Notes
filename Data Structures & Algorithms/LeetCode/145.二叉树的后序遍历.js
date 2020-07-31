@@ -35,7 +35,7 @@
   那么遍历顺序就由 根左右 变更为 右左根
   然后我们仅需将 右左根 变更为 左右根 即可完成后序遍
  */
-var postorderTraversal = function (root) {
+/* var postorderTraversal = function (root) {
   let res = [], stack = []
   if (root) stack.push(root)
   while (stack.length > 0) {
@@ -52,6 +52,23 @@ var postorderTraversal = function (root) {
     if (node.right) stack.push(node.right)
   }
   return res
-};
+}; */
+var postorderTraversal = function (root) {
+  let res = [], stack = []
+  if (root) stack.push(root)
+  while (stack.length) {
+    let node = stack.shift()
+    res.unshift(node.val)
+    if (node.left) stack.unshift(node.left)
+    if (node.right) stack.unshift(node.right)
+  }
+  /* while (stack.length) {
+    let node = stack.pop()
+    res.unshift(node.val)
+    if (node.left) stack.push(node.left)
+    if (node.right) stack.push(node.right)
+  } */
+  return res
+}
 // @lc code=end
 
