@@ -226,7 +226,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
-export function nextTick(cb?: Function, ctx?: Object) {
+export function nextTick(cb, ctx) { // cb?: Function, ctx?: Object
   let _resolve
   callbacks.push(() => {
     if (cb) {
