@@ -116,3 +116,57 @@ function _parseInt(str, radix) {
   return res;
 }
 console.log(_parseInt('12b', 36))
+
+// 数组去重
+function combine () {
+  let arr = Array.prototype.concat.apply([], arguments)
+  return Array.from(new Set(arr))
+}
+console.log(combine(1212, 2, 2, 3, 90, 0, 0, 10))
+
+var sy = Symbol('12')
+console.log(String(sy))
+console.log(sy.toString())
+
+var mysy = Symbol()
+var a = {}
+a[mysy] = 'hh'
+var a = {
+  [mysy]: '00'
+}
+var b = {}
+Object.defineProperty(b, mysy, {value: '90'})
+console.log(b, b[mysy], a, a[mysy])
+
+var thisA = {
+  name: 'zhangsi',
+  describe: function () {
+    return 'name: ' + this.name
+  }
+}
+var name = 'second'
+var funA = thisA.describe
+console.log(0, funA())
+
+// instanceof 运算符用来测试赛一个对象在其原型链中是否存在一个构造函数的 prototype 属性， 但它不能检测 null 和 undefined
+console.log([] instanceof Array)
+console.log([] instanceof Object)
+console.log(new Date() instanceof Date)
+console.log(undefined instanceof undefined)
+console.log(new RegExp() instanceof RegExp)
+
+// 类数组转换为数组 可以调用数组原生方法
+function toArray (a, b) {
+  let args = Array.prototype.slice.call(arguments)
+  let argy = Array.from(arguments)
+  let argu = [...arguments]
+  let argz = Array.prototype.concat.apply([], arguments)
+  console.log(args, argy, argu, argz)
+}
+
+toArray(12, 2, 4, 90)
+const map = new Map([[1, 2], [23, 8]])
+console.log(map, 90)
+console.log(Array.from(map.values()))
+
+// 冒泡排序

@@ -142,7 +142,7 @@ var funcc = thisA.describe
 console.log(0, funcc())
 
 // 1.冒泡排序
-//   排序思路：便利数组，每次遍历将最大（最小）值推至最前，越往后遍历次数越少
+//   排序思路：遍历数组，每次遍历将最大（最小）值推至最前，越往后遍历次数越少
 const bubbleSort = arr => {
     const list = arr.slice() // 保证函数为纯函数
     const len = list.length;
