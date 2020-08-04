@@ -170,3 +170,37 @@ console.log(map, 90)
 console.log(Array.from(map.values()))
 
 // 冒泡排序
+
+// console 输出什么
+var  cns84 = 84
+var myObject = {
+  foo: 'bar',
+  func: function () {
+    var self = this
+    console.log('outer func:  this.foo = ' + this.foo)  // bar
+    console.log('outer func:  self.foo = ' + self.foo)  // bar
+      ; (function () {
+        console.log('inner func:  this.foo = ' + this.foo) // undefined
+        console.log('inner func:  self.foo = ' + self.foo) // bar
+        console.log(cns84) // 84
+      })()
+  }
+}
+myObject.func()
+
+// isNaN polyfill https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/isNaN
+// NaN 是 Not a Number 的缩写，JavaScript 的一种特殊数值，其类型是 Number，可以通过 isNaN(param) 来判断一个值是否是 NaN
+// ES5
+var isNaN = function (value) {
+  var n = Number(value)
+  return n !== n
+}
+
+// ES6 Number.isNaN()
+
+/* 实现函数 isInteger(x) 来判断 x 是否是整数
+可以将 x 转换成 10 进制，判断和本身是不是相等即可： */
+
+function isInteger(x) {
+  return parseInt(x, 10) === x
+}
