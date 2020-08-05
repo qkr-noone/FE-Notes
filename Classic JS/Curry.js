@@ -77,7 +77,24 @@ let add = curry(function () {
   }
   return sum
 })
-console.log(add(1)(2, 3)(4)(5)) // 存在问题 返回一个函数 和值，执行多次会和之前的值累加
+console.log(add(1)(2, 3)(4)(5)) // f 15
+console.log(add(1)(2, 3)(4)(5)) // f 15 存在问题 返回一个函数 和值，执行多次会和之前的值累加
+
+
+/* 二 */
+// 使用这种方法不会存在 执行多次会和之前的值累加
+function sum(...args) {
+  var fn = function (...fnArgs) {
+    return sum.apply(null, args.concat(fnArgs))
+  }
+  fn.toString = () => args.reduce((a, b) => a + b)
+  return fn
+}
+
+console.log(sum(1)(2, 3)(4)(5)) // f 15
+console.log(sum(1)(2, 3)(4)(5)) // f 15
+
+
 
 function curry(fn, args) {
   let length = fn.length

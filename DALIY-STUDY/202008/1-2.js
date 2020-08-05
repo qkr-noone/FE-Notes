@@ -190,17 +190,119 @@ myObject.func()
 
 // isNaN polyfill https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // NaN 是 Not a Number 的缩写，JavaScript 的一种特殊数值，其类型是 Number，可以通过 isNaN(param) 来判断一个值是否是 NaN
-// ES5
+// 和全局函数 isNaN() 相比，Number.isNaN() 不会自行将参数转换成数字，只有在参数是值为 NaN 的数字时，才会返回 true
+// ES5 polyfill 
 var isNaN = function (value) {
   var n = Number(value)
   return n !== n
 }
 
-// ES6 Number.isNaN()
+// ES6 Number.isNaN()  polyfill  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
+// Number.isNaN() 方法确定传递的值是否为 NaN，并且检查其类型是否为 Number。它是原来的全局 isNaN() 的更稳妥的版本。不会自行将参数转换成数字
+Number.isNaN === Number.isNaN || function (value) {
+  return typeof value === 'number' && isNaN(value)
+}
 
 /* 实现函数 isInteger(x) 来判断 x 是否是整数
 可以将 x 转换成 10 进制，判断和本身是不是相等即可： */
 
 function isInteger(x) {
   return parseInt(x, 10) === x
+}
+
+
+// 函数柯里化 
+
+// add(1)(2, 3)(4)(5) => 15
+/* 一 */
+function curry (fn) {
+  let allArgs = []
+  function next () {
+    let args = [].slice.call(arguments)
+    allArgs = allArgs.concat(args)
+    return next
+  }
+
+  // 字符类型
+  next.toString = function () {
+    return fn.apply(null, allArgs)
+  }
+
+  // 数值类型
+  next.valueOf = function () {
+    return fn.apply(null, allArgs)
+  }
+
+  return next
+}
+
+let add = curry(function () {
+  let sum = 0
+  // 存在问题 arguments 会累加
+  console.log(arguments)
+  for (let k = 0; k < arguments.length; k++) {
+    sum += arguments[k]
+  }
+  return sum
+})
+// 浏览器打印 f 15
+console.log(add(1)(2, 3)(4)(5)) // f 15
+console.log(add(1)(2, 3)(4)(5)) // f 30 存在问题 返回一个函数 和值，执行多次会和之前的值累加
+
+
+/* 二 */
+// 使用这种方法不会存在 执行多次会和之前的值累加
+function sum (...args) {
+  var fn = function (...fnArgs) {
+    return sum.apply(null, args.concat(fnArgs))
+  }
+  // args 是参数转成的数组
+  fn.toString = () => args.reduce((a, b) => a + b)
+  return fn
+}
+
+console.log(sum(1)(2, 3)(4)(5)) // f 15
+console.log(sum(1)(2, 3)(4)(5)) // f 15
+
+
+// sum(3)(4)(1)() => 8
+/* 一 */
+function currying(fn) {
+  let allArgs = []
+  return function next() {
+    let args = [].slice.call(arguments)
+    if (args.length) {
+      allArgs = allArgs.concat(args)
+      return next
+    } else {
+      return fn.apply(null, allArgs)
+    }
+  }
+}
+let sum = currying(function () {
+  let sum = 0
+  for (let k = 0; k < arguments.length; k++) {
+    sum += arguments[k]
+  }
+  return sum
+})
+console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // f 23
+
+/* 二 */
+function add(arr) {
+  // args 是参数转成的数组
+  return arr.reduce((acc, cur) => {
+    acc = acc + cur
+    return acc
+  }, 0)
+}
+
+function sum(...args) {
+  return (...newArgs) => {
+    if (newArgs.length === 0) {
+      return add(args)
+    } else {
+      return sum(...args, ...newArgs)
+    }
+  }
 }
