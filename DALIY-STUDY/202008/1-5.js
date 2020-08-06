@@ -286,9 +286,12 @@ let sum = currying(function () {
   }
   return sum
 })
-console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // f 23
+console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // 23
+console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // 46
+// 存在问题 返回一个函数 和值，执行多次会和之前的值累加 （缓存）
 
 /* 二 */
+// 没有缓存
 function add(arr) {
   // args 是参数转成的数组
   return arr.reduce((acc, cur) => {
@@ -306,3 +309,5 @@ function sum(...args) {
     }
   }
 }
+console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // 23
+console.log(sum(3, 5)(4)(2, 1)(5)(3)()) // 23
