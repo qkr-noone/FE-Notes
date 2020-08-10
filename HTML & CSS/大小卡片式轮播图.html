@@ -7,74 +7,78 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>大小轮播</title>
   <style>
-    ul, li {
+    ul,
+    li {
       list-style: none;
     }
-	.switch {
+
+    .switch {
       display: flex;
       align-items: center;
     }
-	li {
-    width: 100px;
-    height: 150px;
-    list-style: none;
-    margin: 0;
-    transition: .8s;
+
+    li {
+      width: 100px;
+      height: 150px;
+      list-style: none;
+      margin: 0;
+      transition: .8s;
     }
-	li:nth-child(1) {
-    transform: scale(.8) translateX(100%);
-}
 
-li:nth-child(2) {
-    transform: scale(.9) translateX(50%);
-}
+    li:nth-child(1) {
+      transform: scale(.8) translateX(100%);
+    }
 
-li:nth-child(3) {
-    transform: scale(1) translateX(0);
-    z-index: 1;
-}
+    li:nth-child(2) {
+      transform: scale(.9) translateX(50%);
+    }
 
-li:nth-child(4) {
-    transform: scale(.9) translateX(-50%);
-}
+    li:nth-child(3) {
+      transform: scale(1) translateX(0);
+      z-index: 1;
+    }
 
-li:nth-child(5) {
-    transform: scale(.8) translateX(-100%);
-    z-index: -1;
-}
+    li:nth-child(4) {
+      transform: scale(.9) translateX(-50%);
+    }
 
-
-img {
-    width: 100%;
-}
-
-.change li:nth-child(1) {
-    width: 0;
-    height: 0;
-    opacity: 0;
-    transition: .6s;
-}
+    li:nth-child(5) {
+      transform: scale(.8) translateX(-100%);
+      z-index: -1;
+    }
 
 
-.change li:nth-child(2) {
-    transform: scale(.8) translateX(100%);
-}
+    img {
+      width: 100%;
+    }
 
-.change li:nth-child(3) {
-    transform: scale(.9) translateX(50%);
-}
+    .change li:nth-child(1) {
+      width: 0;
+      height: 0;
+      opacity: 0;
+      transition: .6s;
+    }
 
-.change li:nth-child(4) {
-    transform: scale(1) translateX(0);
-    z-index: 1;
-}
 
-.change li:nth-child(5) {
-    transform: scale(.9) translateX(-50%);
-}
+    .change li:nth-child(2) {
+      transform: scale(.8) translateX(100%);
+    }
 
+    .change li:nth-child(3) {
+      transform: scale(.9) translateX(50%);
+    }
+
+    .change li:nth-child(4) {
+      transform: scale(1) translateX(0);
+      z-index: 1;
+    }
+
+    .change li:nth-child(5) {
+      transform: scale(.9) translateX(-50%);
+    }
   </style>
 </head>
+
 <body>
   <!-- https://github.com/zhangxinxu/quiz/issues/65 -->
   <ul class="switch">
@@ -86,16 +90,17 @@ img {
   </ul>
 </body>
 <script>
-window.onload =function () {
+  window.onload = function () {
     setInterval(() => {
-        const ul = document.querySelector('ul')
-        ul.classList.add('change')
-        const first = ul.querySelector('li')
-        setTimeout(() => {
-            ul.append(first)
-            ul.classList.remove('change')
-        }, 600)
+      const ul = document.querySelector('ul')
+      ul.classList.add('change')
+      const first = ul.querySelector('li')
+      setTimeout(() => {
+        ul.append(first)
+        ul.classList.remove('change')
+      }, 600)
     }, 1200)
-}
+  }
 </script>
+
 </html>

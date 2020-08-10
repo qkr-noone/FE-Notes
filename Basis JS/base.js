@@ -284,17 +284,7 @@ const preloadImage = path => {
 }
 // preloadImage('https://mirror-gold-cdn.xitu.io/168e09690ff1ecb6331?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1')
 
-// 深度拷贝数组
-function copyArr(arr) {
-  arr.map(item => {
-    if (typeof item === 'object') {
-      return Object.assign({}, item)
-    } else {
-      return item
-    }
-  })
-}
-
+// 深度拷贝数组 普通的数组方法都无法满足 参考深拷贝 对象和数组
 
 // for 中 var let 打印 i 值
 var array_t = []
