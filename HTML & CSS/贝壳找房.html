@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贝壳找房面试题目</title>
+  <style>
+    * {
+      margin: 0;
+    }
+    #a {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      background-color: rebeccapurple;
+    }
+    #b {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background-color: orange;
+    }
+    #c {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      top: 0;
+      left: 0;
+      background-color: rosybrown;
+    }
+    .line {
+      margin: 100px 0;
+    }
+    .parent {
+      width: 100px;
+      height: 100px;
+      background-color: rosybrown;
+      transform: 0;
+    }
+    .child {
+      position: fixed;
+      top: 60px;
+      left: 160px;
+      width: 50px;
+      height: 50px;
+      background-color: rgb(146, 71, 71);
+    }
+  </style>
+</head>
+<body>
+  <p>https://github.com/zhenzhencai/FontEndInterview/blob/master/interview-autumn/beike.md</p>
+  <p>css问题,有a，b，c三个块标签，样式定义如下，说出真实布局情况。如果是acb呢？</p>
+  <div id="a"></div>
+  <div id="c"></div>
+  <div id="b"></div>
+  <div class="line"></div>
+  <p>fixed定位是什么意思，父级标签设置什么可以让子标签fixed定位失效？ 答案：transform</p>
+  <div class="parent">
+    <div class="child"></div>
+  </div>
+  <div class="line"></div>
+  <p>https://github.com/zhenzhencai/FontEndInterview/blob/master/interview-autumn/bigo.md</p>
+</body>
+</html>
