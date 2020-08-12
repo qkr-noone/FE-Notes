@@ -20,11 +20,15 @@ var combine = function(n, k) {
       return
     }
 
-    let rest = k - prev.length
+    /* let rest = k - prev.length
     for (let i = start; i <= n; i++) {
       if (n - i + 1 < rest) {
         continue
       }
+      helper(i + 1, prev.concat(i))
+    } */
+    let temp = n - (k - len) + 1
+    for (let i = start; i <= temp; i++) {
       helper(i + 1, prev.concat(i))
     }
   }
