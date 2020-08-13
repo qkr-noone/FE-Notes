@@ -128,3 +128,199 @@ function getOwnPropertyDescriptors(obj) {
   }
   return result
 }
+
+
+// 请写出如下代码的打印结果
+function Foo() {
+  Foo.a = function () {
+    console.log(1)
+  }
+  this.a = function () {
+    console.log(2)
+  }
+}
+// 以上只是 Foo 的构建方法，没有产生实例，此刻也没有执行
+
+Foo.prototype.a = function () {
+  console.log(3)
+}
+// 现在在 Foo 上挂载了原型方法 a ，方法输出值为 3
+
+Foo.a = function () {
+  console.log(4)
+}
+// 现在在 Foo 上挂载了直接方法 a ，输出值为 4
+
+Foo.a();
+// 立刻执行了 Foo 上的 a 方法，也就是刚刚定义的，所以
+// 输出 4
+
+let obj = new Foo();
+/* 这里调用了 Foo 的构建方法。Foo 的构建方法主要做了两件事：
+1. 将全局的 Foo 上的直接方法 a 替换为一个输出 1 的方法。
+2. 在新对象上挂载直接方法 a ，输出值为 2。
+*/
+
+obj.a();
+// 因为有直接方法 a ，不需要去访问原型链，所以使用的是构建方法里所定义的 this.a，
+// 输出 2
+
+Foo.a();
+// 构建方法里已经替换了全局 Foo 上的 a 方法，所以
+// 输出 1
+
+// 输出顺序是 4 2 1.
+
+
+
+// 第 79 题：input 搜索如何防抖，如何处理中文输入 https://muyiy.cn/question/js/79.html
+/* 参考vue源码对v-model的实现中，对输入中文的处理  ??? */
+function jeiliu(timeout) {
+  var timer;
+  function input(e) {
+    if (e.target.composing) {
+      return;
+    }
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      console.log(e.target.value);
+      timer = null;
+    }, timeout);
+  }
+  return input;
+}
+
+function onCompositionStart(e) {
+  e.target.composing = true;
+}
+function onCompositionEnd(e) {
+  //console.log(e.target)
+  e.target.composing = false;
+  var event = document.createEvent('HTMLEvents');
+  event.initEvent('input');
+  e.target.dispatchEvent(event);
+}
+var input_dom = document.getElementById('myinput');
+input_dom.addEventListener('input', jeiliu(1000));
+input_dom.addEventListener('compositionstart', onCompositionStart);
+input_dom.addEventListener('compositionend', onCompositionEnd);
+
+/* 
+对象的键名只能是字符串和 Symbol 类型。
+其他类型的键名会被转换成字符串类型。
+对象转字符串默认会调用 toString 方法。 */
+var a = {}, b = '123', c = 123;
+a[b] = 'b';
+a[c] = 'c';
+console.log(a[b]); // c
+
+/* --------------------- */
+// example 2
+var a = {}, b = Symbol('123'), c = Symbol('123');
+a[b] = 'b';
+a[c] = 'c';
+console.log(a[b]); // b
+
+/* --------------------- */
+// example 3
+var a = {}, b = { key: '123' }, c = { key: '456' };
+a[b] = 'b';
+a[c] = 'c';
+console.log(a[b]); // c
+
+// 第 75 题：数组里面有10万个数据，取第一个元素和第10万个元素的时间相差多少
+/*
+ans1: 数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
+
+得出结论：消耗时间几乎一致，差异可以忽略不计
+
+ans2: JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，
+作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，
+都是用 key 精确查找哈希表的过程，其消耗时间大致相同。 @lvtraveler 请帮忙测试下稀松数组。*/
+
+/* https://muyiy.cn/question/js/72.html 详细 */
+let arrs = new Array(10000);
+
+console.time('for');
+let l = arrs.length
+for (let i = 0; i < l; i++) {
+
+};
+console.timeEnd('for');
+
+console.time('forEach');
+
+arrs.forEach((arr) => {
+
+});
+console.timeEnd('forEach');
+
+// es6 => es5 代码编译 在之前创建的项目中使用过
+
+
+/* https://muyiy.cn/question/js/53.html 详细 */
+/* 首先，a和b同时引用了{ n: 2 } 对象，接着执行到a.x = a = { n：2}语句，尽管赋值是从右到左的没错，
+  但是 . 的优先级比 = 要高，所以这里首先执行a.x，相当于为a（或者b）所指向的{ n: 1 } 对象新增了一个属性x，
+  即此时对象将变为{ n: 1; x: undefined } */
+var a = { n: 1 };
+var b = a;
+a.x = a = { n: 2 };
+
+console.log(a.x)  // undefined
+console.log(b.x) // { n: 2 }
+
+
+// 输出以下代码执行的结果并解释为什么 详细
+var obj = {
+  '2': 3,
+  '3': 4,
+  'length': 2,
+  'splice': Array.prototype.splice,
+  'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj) // Object(4) [empty × 2, 1, 2, splice: ƒ, push: ƒ]
+
+// 改版
+var obj = {
+  '2': 3,
+  '3': 4,
+  'length': 2,
+  'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj) // { '2': 1, '3': 2, length: 4, push: f }
+
+// 改版2
+var obj = {
+  '2': 3,
+  '3': 4,
+  'length': 0,
+  'splice': Array.prototype.splice,
+  'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj) 
+// Object(2) [1, 2, 2: 3, 3: 4, splice: ƒ, push: ƒ]
+// { '0': 1, '1': 2, '2': 3, '3': 4, length: 2, splice: f, push: f }
+
+// 更多 MDN 解释 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/push#Description
+var obj = {
+  length: 0,
+
+  addElem: function addElem(elem) {
+    // obj.length is automatically incremented 
+    // every time an element is added.
+    [].push.call(this, elem);
+  }
+};
+
+// Let's add some empty objects just to illustrate.
+obj.addElem({});
+obj.addElem({});
+console.log(obj.length, obj);
