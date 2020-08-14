@@ -324,3 +324,20 @@ var obj = {
 obj.addElem({});
 obj.addElem({});
 console.log(obj.length, obj);
+
+new Promise((resolve, reject) => {
+  console.log("Promise1");
+  resolve();
+}).then(() => {
+  console.log("then1-1");
+  new Promise((resolve, reject) => {
+    console.log("Promise2");
+    resolve();
+  }).then(() => {
+    console.log("then2-1");
+  }).then(() => {
+    console.log("then2-2");
+  })
+}).then(() => {
+  console.log("then1-2");
+})
