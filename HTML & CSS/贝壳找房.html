@@ -60,5 +60,19 @@
   </div>
   <div class="line"></div>
   <p>https://github.com/zhenzhencai/FontEndInterview/blob/master/interview-autumn/bigo.md</p>
+  <canvas id="canvas"></canvas>
 </body>
+<script>
+  window.onload = function () {
+    function getCanvasFp () {
+      const canvas = document.getElementById('canvas')
+      const ctx = canvas.getContext('2d')
+      ctx.font = '14px Arial'
+      ctx.fillStyle = '#ccc'
+      ctx.fillText('hello, shanyue', 2, 2)
+      return canvas.toDataURL('image/jpeg')
+    }
+    console.log(getCanvasFp())
+  }
+</script>
 </html>
