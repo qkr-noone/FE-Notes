@@ -143,6 +143,13 @@ const target = {
 };
 target.target = target
 console.log(deepMapCopy(target))
+/* 
+{ field1: 1,
+  field2: undefined,
+  field3: { child: 'child' },
+  field4: [ 2, 4, 8 ],
+  target: [Circular] }
+ */
 // 执行没有报错，且target属性，变为了一个Circular类型，即循环应用的意思
 
 `WeakMap 代替 Map`
@@ -185,7 +192,7 @@ function clone(target, map = new WeakMap()) {
       if (keys) {
         key = value;
       }
-      cloneTarget[key] = clone2(target[key], map);
+      cloneTarget[key] = clone(target[key], map);
     });
 
     return cloneTarget;
@@ -193,7 +200,16 @@ function clone(target, map = new WeakMap()) {
     return target;
   }
 }
-
+const target = {
+  field1: 1,
+  field2: undefined,
+  field3: {
+    child: 'child'
+  },
+  field4: [2, 4, 8]
+};
+target.target = target
+console.log(clone(target))
 
 `
 更多版本

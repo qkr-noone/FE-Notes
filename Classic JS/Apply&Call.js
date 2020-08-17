@@ -77,29 +77,42 @@ Function.prototype.apply = function (context, arr) {
     这样就做到了把传给call的参数传递给了context.fn函数
 */
 
-// 实现call / apply
-// 思路: 利用this的上下文特性。
+/* 类似 https://juejin.im/post/6844903906279964686 */
+// 实现 call/apply
+// 思路: 利用 this 的上下文特性。
 
-//实现apply只要把下一行中的...args换成args即可 
-Function.prototype.myCall = function (context = window, ...args) {
-  let func = this;
-  let fn = Symbol("fn");
-  context[fn] = func;
+//实现 apply 只要把下一行中的 ...args 换成 args 即可 
 
-  let res = context[fn](...args);//重点代码，利用this指向，相当于context.caller(...args)
+/* 
+var foo = {
+  value: 1
+};
 
-  delete context[fn];
-  return res;
+function bar() {
+  console.log(this.value);
 }
 
+bar.call2(foo)
+ */
 // 实现函数 call 方法
 const selfCall = function (context, ...args) {
+  // context => foo
+  // content || (context = window) 存在 bug
+  if (context === null || context === undefined) {
+    // 指定为 null 和 undefined 的 this 值会自动指向全局对象(浏览器中为window)
+    context = window
+  } else {
+    // 值为原始值（数字，字符串，布尔值）的 this 会指向该原始值的实例对象
+    context = Object(context)
+  }
+  
+  // 获取调用 call 的函数 => this => bar
   let func = this
-  content || (context = window)
-  if (typeof func !== 'function') throw new TypeError('this is not function')
+  // 注释这段代码未验证
+  // if (typeof func !== 'function') throw new TypeError('this is not function')
   let caller = Symbol('caller')
   context[caller] = func
-  let res = context[caller](...args)
+  let res = context[caller](...args) //重点代码，利用this指向，相当于context.caller(...args)
   delete context[caller]
   return res
 }

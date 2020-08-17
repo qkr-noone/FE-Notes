@@ -1,3 +1,4 @@
+/* https://juejin.im/post/6844903725442531341 */
 // 实现 (a == 1 && a == 2 && a == 3) 值为真
 class ResetA {
   constructor(value) {
