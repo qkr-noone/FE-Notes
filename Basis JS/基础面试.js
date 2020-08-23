@@ -239,3 +239,12 @@ console.log(arrs([1, ['2', [3, ['4', 5]]], [1], [2, [2]], 6]))
 // webpack中引入文件的几种写法
 
 // 大公司里怎样开发和部署前端代码？ https://github.com/fouber/blog/issues/6
+
+// 对比及解释 WebSocket  Web Workers   Service Worker
+// Service Worker https://www.jianshu.com/p/768be2733872
+
+// DNS 解析 dns-prefetch
+/* 当浏览器从第三方服务跨域请求资源的时候，在浏览器发起请求之前，
+这个第三方的跨域域名需要被解析为一个IP地址，这个过程就是DNS解析，
+DNS缓存可以用来减少这个过程的耗时，DNS解析可能会增加请求的延迟，
+对于那些需要请求许多第三方的资源的网站而言，DNS解析的耗时延迟可能会大大降低网页加载性能 */
