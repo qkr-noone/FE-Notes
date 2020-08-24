@@ -26,6 +26,9 @@
 // 面积 S(i,j)=min(h[i],h[j])×(j−i)
 // 时间复杂度：O(n)， 一次扫描
 // 空间复杂度：O(1)， 使用恒定的额外空间
+
+// 8/24 枚举法解释 https://www.bilibili.com/video/BV1TK411j7LP
+
 var maxArea = function(height) {
   let left = 0;
   let right = height.length - 1;
