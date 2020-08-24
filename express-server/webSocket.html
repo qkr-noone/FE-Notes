@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>调试 WebSocket</title>
+</head>
+<body>
+	<p>调试 WebSocket</p>
+</body>
+<script>
+	let ws = new WebSocket('ws://localhost:9999/')
+	ws.onopen = function () {
+		ws.send('hello')
+	}
+	ws.onmessage = function (res) {
+		console.log('服务端发来的消息', res)
+		console.log(res.data)
+	}
+</script>
+</html>

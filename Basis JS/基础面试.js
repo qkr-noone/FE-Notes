@@ -240,8 +240,6 @@ console.log(arrs([1, ['2', [3, ['4', 5]]], [1], [2, [2]], 6]))
 
 // 大公司里怎样开发和部署前端代码？ https://github.com/fouber/blog/issues/6
 
-// 对比及解释 WebSocket  Web Workers   Service Worker
-// Service Worker https://www.jianshu.com/p/768be2733872
 
 // DNS 解析 dns-prefetch
 /* 当浏览器从第三方服务跨域请求资源的时候，在浏览器发起请求之前，

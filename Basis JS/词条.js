@@ -170,3 +170,54 @@ console.log(Parent.prototype.isPrototypeOf(instance))
 `
 // 拓展
 // 继承 -> Class -> new 
+
+// 对比及解释 WebSocket  Web Workers   Service Worker
+// https://juejin.im/post/6844903696560553991
+`WebSocket
+  在 H5 的 WebSocket 出现前，实现消息推送的主要方式是 长轮询、短轮询、iframe流
+
+  短轮询（Polling）和长轮询（Long-Polling）， 都是先由客户端发起 Ajax 请求，才能进行通信，走的是 HTTP 协议，服务器端无法主动向客户端推送信息。
+
+  HTTP是半双工通信
+  这种半双工通信的特点就是：
+  a. 同一时刻数据是单向流动的，客户端向服务端请求数据->单向，服务端向客户端返回数据->单向
+  b. 服务器不能主动的推送数据给客户端
+
+  而 WebSocket 实现在客户端和服务端上建立了一个长久的连接，两边可以任意发数据 => 双工通信
+
+  优势：
+  1. 支持双向通信，实时性更强
+  2. 更好的二进制支持
+  3. 较小的控制开销 (连接创建后，ws客户端、服务端进行数据交换时，协议控制的数据包头部较少)
+`
+// 基本用法 在 express-server 服务器调试
+function connectWebSocket () {
+  const ws = new WebSocket('ws://localhost:9999')
+  // 客户端与服务端建立连接后触发
+  ws.onopen = function () {
+    ws.send('hello')
+  }
+  // 监听服务端消息(接收消息)
+  ws.onmessage = function (res) {
+    console.log(res) // 打印的是 MessageEvent 对象
+    console.log(res.data) // 真正的消息数据时 res.data
+  }
+  ws.onerror = function () {
+    console.log('连接失败，正在重新连接...')
+    connectWebSocket()
+  }
+  // 监听关闭
+  ws.onclose = function () {
+    console.log('连接关闭')
+  }
+}
+connectWebSocket()
+
+`Web Worker
+  https://juejin.im/post/6844903638431694862
+  https://juejin.im/post/6844903736238669837
+  http://www.ruanyifeng.com/blog/2018/07/web-worker.html
+  https://juejin.im/post/6844903590503383054`
+
+`Service Worker
+  https://www.jianshu.com/p/768be2733872`
