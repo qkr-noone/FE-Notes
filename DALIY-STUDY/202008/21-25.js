@@ -263,3 +263,106 @@ var change = function (amount, coins) {
   return dp[dp.length - 1]
 }
 console.log(change(8, [1, 2, 5]))
+
+
+// Promise 基础
+
+const promise = new Promise(function(resolve, reject) {
+  const temp = 2
+  if (temp > 4) {
+    resolve(temp)
+  } else {
+    reject(temp)
+  }
+})
+// Promise 实例生成以后，可以用 then 方法分别制定 Resolved 状态和 Rejected 状态的回调函数。
+promise.then(function (value) {
+  console.log(value)
+}, function (error) {
+  console.log(error)
+})
+
+function timeout (ms) {
+  return new Promise((resolve, reject) => {
+    // setTimeout 第三个参数 定时器到期，会作为参数传递给 setTimeout 回调函数
+    setTimeout(resolve, ms, 'done')
+  })
+}
+timeout(100).then((value) => {
+  console.log(value)
+})
+
+let promise = new Promise((resolve, reject) => {
+  console.log('Promise')
+  resolve()
+})
+promise.then(() => {
+  console.log('Resolved')
+})
+console.log('End')
+// Promise
+// End
+// Resolved
+
+// 异步加载图片
+function loadImageAsync(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+
+    image.onload = function () {
+      resolve(image)
+    }
+
+    image.onerror = function () {
+      reject(new Error('load image error:' + url))
+    }
+
+    image.src = url
+  })
+}
+loadImageAsync('https://img.app178.com/app/202008/1059336/logo.png')
+// Promise {<pending>}
+// {
+//   __proto__: Promise
+//   [[PromiseStatus]]: "fulfilled"
+//   [[PromiseValue]]: img
+// }
+
+loadImageAsync('hsasdg')
+// Promise {<pending>}
+//   __proto__: Promise
+//   [[PromiseStatus]]: "rejected"
+//   [[PromiseValue]]: Error: load image error:hsasdg
+
+
+// Promise 实现 Ajax
+const getJSON = function (url) {
+  const promise = new Promise(function(resolve, reject) {
+
+    const handler = function () {
+      if (this.readyState !== 4) {
+        return;
+      }
+      if (this.status === 200) {
+        resolve(this.response)
+      } else {
+        reject(new Error(this.statusText))
+      }
+    }
+
+    const client = new XMLHttpRequest()
+    client.open('GET', url)
+    client.onreadystatechange = handler
+    client.responseType = 'json'
+    client.setRequestHeader('Accept', 'application/json')
+    client.send()
+  })
+  
+  return promise
+}
+
+getJSON('url').then(json => {
+  console.log(json)
+}, error => {
+  console.log(error)
+})
