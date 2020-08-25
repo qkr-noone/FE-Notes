@@ -45,6 +45,7 @@ var hasCycle = function (head) {
   return false
 }
 // 暴力解法 时间复杂度为 O(n^2)，空间复杂度为 O(1)
+// https://leetcode-cn.com/problems/linked-list-cycle/solution/lei-si-xiao-xue-de-zhui-ji-wen-ti-kuai-man-zhi-zhe/
 // var hasCycle = (head) => {
 //   let cur = head;
 //   let step1 = 0
@@ -86,5 +87,20 @@ var hasCycle = function (head) {
 //   }
 //   return true
 // };
+
+// 8/25 双指针
+/* var hasCycle = function (head) {
+  if (head === null) return false
+  let solt = head, fast = head.next
+  while (solt && fast && fast.next) {
+    if (solt === fast) return true
+    else if (!fast.next) return false
+    else {
+      solt = solt.next
+      fast = fast.next.next
+    }
+  }
+  return false
+}; */
 // @lc code=end
 
