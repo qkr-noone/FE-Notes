@@ -366,3 +366,31 @@ getJSON('url').then(json => {
 }, error => {
   console.log(error)
 })
+
+// 实现一个 Promise.or() 方法
+/* 
+  要求： 参数是 promise 数组
+  返回数组中的索引靠前成功的 res
+  当 n - 1 个 promise 失败时，直接返回它
+  类似 或运算
+ */
+
+Promise.or = function (promises) {
+  let length = promises.length;
+  let i = 0;
+  return new Promise((resovle, reject) => {
+    help(resovle, reject);
+  })
+
+  function help(resolve, reject) {
+    promises[i].then(res => {
+      resolve(res);
+    }).catch(e => {
+      if (i === length - 1) return reject(e);
+      else {
+        i++;
+        help(resolve, reject);
+      }
+    })
+  }
+}
