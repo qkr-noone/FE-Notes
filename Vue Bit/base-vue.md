@@ -14,11 +14,11 @@
 4. mvvm入口函数，整合以上三者
 上述流程如图所示：
 ![MVVM的双向绑定](./MVVM-binding.png)
-[剖析Vue原理&实现双向绑定MVVM](https://segmentfault.com/a/1190000006599500)
+[参考：剖析Vue原理&实现双向绑定MVVM](https://segmentfault.com/a/1190000006599500)
 
 ### Vue 三要素
 
-[实现双向绑定Proxy比defineproperty优劣如何?](https://juejin.im/post/6844903601416978439)
+[参考：实现双向绑定Proxy比defineproperty优劣如何?](https://juejin.im/post/6844903601416978439)
 
 * 响应式: 例如如何监听数据变化,其中的实现方法就是我们提到的双向绑定
 * 模板引擎: 如何解析模板
@@ -37,6 +37,7 @@ Proxy 与 Object.defineProperty对对象/对象的属性进行“劫持”，在
 
 
 [具体实现](./read-vue-2.6.11/mycode.js)
+[更加具体实现细节](https://juejin.im/post/6844903601416978439)
 ### Vue 中 Object.defineProperty 缺陷
 1. Object.defineProperty 只能对遍历过对象属性直接修改，无法监听对象
 2. Object.defineProperty 只能劫持对象的属性,因此我们需要对每个对象的每个属性进行遍历

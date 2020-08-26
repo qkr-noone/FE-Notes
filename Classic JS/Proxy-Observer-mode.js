@@ -15,7 +15,8 @@ function set(target, key, value, receiver) {
 
 const person = observable({
   name: 'qkr',
-  age: 22
+  age: 22,
+  size: {small: true}
 })
 function print() {
   console.log(`${person.name}，${person.age}`)
@@ -24,7 +25,8 @@ function print() {
 
 observe(print)
 
-person.name = 'qkr001'
+person.name = {next: 12}
+person.size.small = 1 // 不会触发打印
 person.height = 172
 
 

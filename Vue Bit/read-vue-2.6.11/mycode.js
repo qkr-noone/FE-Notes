@@ -87,6 +87,7 @@
         }
     }
     function observer(target) {
+        // 当值不存在，或者不是复杂数据类型时，不再需要继续深入监听
         if (!target || (typeof target !== 'object')) {
             return
         }
@@ -113,6 +114,7 @@
         }
     }
 
+    // 为 Dep 类设置一个静态属性,默认为 null,工作时指向当前的 Watcher
     Dep.target = null
 
     // 依赖收集
