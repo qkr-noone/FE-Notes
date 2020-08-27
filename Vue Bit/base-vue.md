@@ -55,4 +55,4 @@ Vue 监听 push() pop() shift() unshift() splice() sort() reverse() 实现
 缺点：
 1. 不能深度劫持对象属性
 2. 可能会触发多次的数据劫持调用
-### (如何实现一个 Event)[https://juejin.im/post/6844903587043082247]
+### (如何实现一个 Event Bus 进行组件通信)[https://juejin.im/post/6844903587043082247]

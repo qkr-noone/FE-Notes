@@ -90,6 +90,23 @@
       border: 8px solid;
       border-image: linear-gradient(deepskyblue, deeppink) 8;
     }
+    .blue, .red-inner {
+      height: 50px;
+      margin: 10px 0;
+    }
+
+    .blue {
+      background: blue;
+    }
+
+    .red-outer {
+      /* BFC 影响BFC 内部子元素margin不会溢出 */
+      overflow: auto;
+      /* BFC 外部还是会重叠 */
+      /* margin: 0 0; */
+      margin: 10px 0;
+      background: red;
+    }
   </style>
 
 <body>
@@ -104,6 +121,11 @@
   </div>
   <div class="box-2">
     <div class="box-in2">圆角渐变边框</div>
+  </div>
+  <hr>
+  <div class="blue"></div>
+  <div class="red-outer">
+    <div class="red-inner">red inner</div>
   </div>
 </body>
 

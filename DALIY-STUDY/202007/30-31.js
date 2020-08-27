@@ -167,7 +167,7 @@ console.log(createData(1, 3)); // 1层深度，每层有3个数据 {data: {0: 0,
 createData(3, 0); // 3层深度，每层有0个数据 {data: {data: {data: {}}}}
 
 
-/* next-tick 实现原理 */
+/* next-tick 实现原理 这是最新的版本 */
 // https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
 
 export let isUsingMicroTask = false
@@ -186,7 +186,8 @@ function flushCallbacks () {
 
 let timerFunc
 
-// 兼容
+// 兼容 优先级(版本不一样 优先级也不一样 目的是最快的执行更新) Promise.then() > MutationObserver > setImmediate() > setTimeout()
+/* 和其他异步一起执行时 考虑其环境 */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
@@ -239,8 +240,11 @@ export function nextTick(cb, ctx) { // cb?: Function, ctx?: Object
       _resolve(ctx)
     }
   })
+  // 检查上一个异步任务队列（即名为callbacks的任务数组）是否派发和执行完毕了。pending此处相当于一个锁
   if (!pending) {
+    // 若上一个异步任务队列已经执行完毕，则将pending设定为true（把锁锁上）
     pending = true
+    // 调用判断Promise，MutationObserver，setTimeout的优先级
     timerFunc()
   }
   // 这是当 nextTick 不传 cb 参数的时候，提供一个 Promise 化的调用
