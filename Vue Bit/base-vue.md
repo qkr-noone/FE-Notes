@@ -38,6 +38,7 @@ Proxy 与 Object.defineProperty对对象/对象的属性进行“劫持”，在
 
 [具体实现](./read-vue-2.6.11/mycode.js)
 [更加具体实现细节](https://juejin.im/post/6844903601416978439)
+[Vue2.0响应式原理机制 - defineProperty 不用 class & 数组方法劫持 & 实例](https://www.cnblogs.com/fs0196/p/12691407.html)
 ### Vue 中 Object.defineProperty 缺陷
 1. Object.defineProperty 只能对遍历过对象属性直接修改，无法监听对象
 2. Object.defineProperty 只能劫持对象的属性,因此我们需要对每个对象的每个属性进行遍历
@@ -45,9 +46,13 @@ Proxy 与 Object.defineProperty对对象/对象的属性进行“劫持”，在
 Vue 只针对了以上八种方法进行了hack处理,所以其他数组的属性也是检测不到的，还是具有一定的局限性
 Vue 监听 push() pop() shift() unshift() splice() sort() reverse() 实现
 
-### Proxy 取代它的有以下优点
+### Proxy 取代它的优缺点
+优点
 1. 可以劫持整个对象，并返回一个新对象
 2. Proxy 可以直接监听数组的变化
 3. 有13种劫持操作
 
+缺点：
+1. 不能深度劫持对象属性
+2. 可能会触发多次的数据劫持调用
 ### (如何实现一个 Event)[https://juejin.im/post/6844903587043082247]

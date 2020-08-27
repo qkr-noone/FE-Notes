@@ -394,3 +394,108 @@ Promise.or = function (promises) {
     })
   }
 }
+
+// 同一个拦截器函数可以设置多个操作
+var handler = {
+  get: function (target, name) {
+    if (name === 'prototype') {
+      return Object.prototype
+    }
+    return 'hello' + name
+  },
+  apply: function(target, thisBinding, args) {
+    return args[0]
+  },
+  construct: function(target, args) {
+    return {value: args[1]}
+  }
+}
+var fproxy = new Proxy(function(x, y) {
+  return x + y
+},handler)
+console.log(fproxy(1, 2)) // 1
+console.log(new fproxy(1, 2)) // { value: 2 }
+console.log(fproxy.prototype === Object.prototype) // true
+console.log(fproxy.foo) // hellofoo
+
+var person = {
+  name: 'qkr'
+}
+var proxy = new Proxy(person, {
+  get(target, property) {
+    if (property in target) {
+      return target[property]
+    } else {
+      throw new ReferenceError('property \'' + property + '\' does not exist')
+    }
+  }
+})
+console.log(proxy.name) // qkr
+console.log(proxy.namess) // ReferenceError: property 'namess' does not exist
+
+// 拦截数组
+function creatArray(...ele) {
+  let handler = {
+    get(target, key, receiver) {
+      let index = Number(key)
+      if (index < 0) {
+        key = String(target.length + index)
+      }
+      return Reflect.get(target, key, receiver)
+    }
+  }
+  let target = []
+  target.push(...ele)
+  return new Proxy(target, handler)
+}
+console.log(creatArray(1, 3, 5)[-1]) // 5
+
+// 链式效果
+var pipe = (function(){
+  return function (value) {
+    var funcStack = []
+    var oproxy = new Proxy({}, {
+      get: function (pipeObject, fnName) {
+        if(fnName === 'get') {
+          return funcStack.reduce(function (val,fn) {
+            return fn(val)
+          }, value)
+        }
+        funcStack.push(window[fnName])
+        return oproxy
+      }
+    })
+    return oproxy
+  }
+}())
+var double = n => n * 2
+var pow = n => n * n
+var reverseInt = n => n.toString().split('').reverse().join('') | 0
+console.log(pipe(3).double.pow.reverseInt.get) // 63
+
+// apply 拦截函数的调用 call apply 操作
+var handler = {
+  apply(target, ctx, args) {
+    return Relect.apply(...arguments)
+  }
+}
+
+// 例如
+var target = function () { return 12}
+var handler = {
+  apply: function () {
+    return 'proxy ...'
+  },
+  has(target, key) {
+    if (key[0] === '_') {
+      return false
+    }
+    return key in target
+  }
+}
+var p = new Proxy(target, handler)
+console.log(p()) // proxy ...
+var target2 = function () { return 12 }
+var p2 = {sa: 2}
+console.log('_sa' in p2) // false
+console.log('sa' in p2) // true

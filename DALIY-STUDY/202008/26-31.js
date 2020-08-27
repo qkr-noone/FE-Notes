@@ -137,41 +137,17 @@
       },
     })
   }
-  function defineProxyReactive(target) {
-    console.log(target)
-    let dep = new Dep()
-    const newTarget = new Proxy(target, {
-      get(target, key, receiver) {
-        let val = target[key]
-        // if(typeof val === 'object' && val !== null) {
-        //   return defineProxyReactive(val)
-        // }
-        dep.addSub(Dep.target)
-        return val
-      },
-      set(target, key, value, receiver) {
-        let val = Reflect.set(target, key, value, receiver)
-        dep.notify()
-        return val
-      }
-    })
-    return newTarget
-  }
   // 监听者 监听属性值变化
   class Observer {
     constructor(target) {
       this.target = target
       this.walk(target)
-      // this.proxy(target)
     }
     walk(target) {
       Object.keys(target).forEach(key => this.convert(key, target[key]))
     }
     convert(key, val) {
       defineReactive(this.target, key, val)
-    }
-    proxy(target) {
-      defineProxyReactive(target)
     }
   }
   function observe(target) {

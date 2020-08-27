@@ -82,4 +82,9 @@ test('observe', () => {
 })
 
 // continue https://juejin.im/post/6844903601416978439
-// 实现双向绑定Proxy比defineproperty优劣如何?
+
+// 使用Proxy实现vue数据双向绑定 https://www.cnblogs.com/goloving/p/12911476.html
+// 用Proxy实现简单的vue双向绑定 https://www.cnblogs.com/tugenhua0707/p/10306793.html
+// https://juejin.im/post/6844903990170222600#heading-3
+// vue 3.0 原理源码进阶
+// https://juejin.im/post/6854573211528069128
