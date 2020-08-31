@@ -1,23 +1,31 @@
 ### webpack 官方定义
   本质上，webpack 是一个现代 JavaScript 应用程序的静态模块打包器(module bundler)。当 webpack 处理应用程序时，它会递归地构建一个依赖关系图(dependency graph)，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个 bundle。
 
-  一、核心打包原理 
-  1.1 打包的主要流程如下
+##  一、核心打包原理 
+  ### 1.1 打包的主要流程如下
   
-  需要读到入口文件里面的内容。分析入口文件，递归的去读取模块所依赖的文件内容，生成AST语法树。根据AST语法  树，生成浏览器能够运行的代码
-  1.2 具体细节
+  1. 需要读到入口文件里面的内容。
+  2. 分析入口文件，递归的去读取模块所依赖的文件内容，生成AST语法树。
+  3. 根据AST语法树，生成浏览器能够运行的代码
+  * 其他表述：webpack 打包的过程
+    >1. 读取文件，分析模块依赖
+    >2. 对模块进行解析执行（深度遍历）
+    >3. 针对不同的模块使用不同的 loader
+    >4. 编译模块，生成抽象语法树（AST）
+    >5. 遍历 AST，输出 JS
+  ### 1.2 具体细节
   
-  获取主模块内容分析模块
+  1. 获取主模块内容
+  2. 分析模块
+      * 安装@babel/parser包（转AST）
+  3. 对模块内容进行处理
   
-  安装@babel/parser包（转AST）
-  对模块内容进行处理
+      * 安装@babel/traverse包（遍历AST收集依赖）
+      * 安装@babel/core和@babel/preset-env包   （es6转ES5）
+  4. 递归所有模块
+  5. 生成最终代码
   
-  安装@babel/traverse包（遍历AST收集依赖）
-  安装@babel/core和@babel/preset-env包 （ES6 转 ES5）
-  递归所有模块生成最终代码
-  
-  作者：阳光是sunny
-  链接：https://juejin.im/post/6854573217336541192
+  [作者：阳光是sunny](https://juejin.im/post/6854573217336541192)
 
 1. [webpack loader和plugin编写](https://juejin.im/post/6844903689442820110)
 
@@ -55,3 +63,17 @@
 webpack-bundle-analyzer 指导代码
 1. 拆分资源 --- DllPlugin
 2. 删除冗余代码 --- Tree-Shaking (UglifyJsPlugin webpack4 默认使用)
+
+##### Q1-3: webpack 的 loader 和 plugin 区别，举几个常用的 loader 和 plugin 并说出作用
+1. loader
+    > * loader 用于对模块的源代码进行转换。
+    > * loader 可以使你在 import 或"加载"模块时预处理文件。
+    > * 因此，loader 类似于其他构建工具中“任务(task)”，并提供了处理前端构建步骤的强大方法。
+    > * loader 可以将文件从不同的语言（如 TypeScript）转换为 JavaScript，或将内联图像转换为 data URL。loader 甚至允许你直接在 JavaScript 模块中 import CSS文件！
+    > * 因为 webpack 本身只能处理 JavaScript，如果要处理其他类型的文件，就需要使用 loader 进行转换，loader 本身就是一个函数，接受源文件为参数，返回转换的结果。
+2. Plugin
+    > * Plugin 是用来扩展 Webpack 功能的，通过在构建流程里注入钩子实现，它给 Webpack 带来了很大的灵活性。
+     > * 通过plugin（插件）webpack可以实 现 loader 所不能完成的复杂功能，使用 plugin 丰富的自定义 API 以及生命周期事件，可以控制 webpack 打包流程的每个环节，实现对 webpack 的自定义功能扩展。
+1. [常用的 loader、plugin](https://www.jianshu.com/p/b43ff1bfa813)
+2. [loader 和 plugin 的区别](https://blog.csdn.net/jiang7701037/article/details/98887179)
+3. [更多区别](https://zhuanlan.zhihu.com/p/77342099)

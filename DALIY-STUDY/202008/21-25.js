@@ -476,7 +476,7 @@ console.log(pipe(3).double.pow.reverseInt.get) // 63
 // apply 拦截函数的调用 call apply 操作
 var handler = {
   apply(target, ctx, args) {
-    return Relect.apply(...arguments)
+    return Reflect.apply(...arguments)
   }
 }
 
@@ -499,3 +499,227 @@ var target2 = function () { return 12 }
 var p2 = {sa: 2}
 console.log('_sa' in p2) // false
 console.log('sa' in p2) // true
+
+// call apply 直接调用
+var twice = {
+  apply (target, ctx, args) {
+    return Reflect.apply(...arguments) * 2
+  }
+}
+function sum(left, right) {
+  return left + right
+}
+var proxy = new Proxy(sum, twice)
+console.log(proxy(1, 2), proxy.call(null, 5, 6), proxy.apply(null, [5, 8])) // 6 22 26
+// 直接调用 Reflect.apply 也会被拦截
+console.log(Reflect.apply(proxy, null, [9, 10]))
+
+// has 拦截 HasProperty 操作 判断对象是否具有某个属性时，这个方法会生效，典型操作就是 in 运算符
+var handler = {
+  has(target, key) {
+    if (key[0] === '_') {
+      return false
+    }
+    return key in target
+  }
+}
+var target = {_prop: 'foo', prop: 'foo'}
+var proxy = new Proxy(target, handler)
+console.log('_prop' in proxy) // false
+
+// 如对象不可配置扩展 has 会拦截报错
+var obj = {a: 10}
+Object.preventExtensions(obj)
+var p = new Proxy(obj, {
+  has: function(target, prop) {
+    return false
+  }
+})
+'a' in p // TypeError ... the proxy target is not extensible
+
+// has 对 for...in 循环不生效， 导致不符合要求的属性么有被排除在 for...in 循环之外
+let stu1 = { name: '张三', score: 59 };
+let stu2 = { name: '李四', score: 99 };
+let handler = {
+  has(target, prop) {
+    if (prop === 'score' && target[prop] < 60) {
+      console.log(`${target.name} 不及格`);
+      return false;
+    }
+    console.log(12)
+    return prop in target;
+  }
+}
+let oproxy1 = new Proxy(stu1, handler);
+let oproxy2 = new Proxy(stu2, handler);
+console.log('score' in oproxy1) // 张三 不及格 fasle
+for (let a in oproxy1) {
+  console.log(oproxy1[a]); // 张三 59
+}
+
+for (const b in oproxy2) {
+  console.log(oproxy2[b]) // 李四 99
+}
+// construct 用于拦截 new 命令, construct方法返回的必须是一个对象，否则会报错。
+var p = new Proxy(function() {}, {
+  construct: function (target, args) {
+    console.log('called:' + args.join(', '))
+    return {value: args[0] * 10}
+  }
+});
+console.log((new p(1)).value)
+// called:1
+// 10
+
+// deleteProperty() 拦截delete
+var handler = {
+  has(target, key) {
+    if (key[0] === '_') {
+      return false
+    }
+    return key in target
+  },
+  deleteProperty(target, key) {
+    invariant(key, 'delete')
+    delete target[key]
+    return true
+  },
+  defineProperty(target, key, descriptor) {
+    return false
+  },
+  getOwnPropertyDescriptor(target, key) {
+    if (key[0] === '_') {
+      return
+    }
+    return Object.getOwnPropertyDescriptor(target, key)
+  },
+  ownKeys(target) {
+    return ['prop']
+  },
+  preventExtensions(target) {
+    // 防止出现问题 方法里面，调用一次
+    Object.preventExtensions(target);
+    return true
+  }
+}
+function invariant(key, action) {
+  if (key[0] === '_') {
+    throw new Error(`Invalid attempt to ${action} private "${key}" property`)
+  }
+}
+var target = { _prop: 'foo', prop: 'foo' }
+var proxy = new Proxy(target, handler)
+// console.log(delete proxy.prop, target) // true { _prop: 'foo' }
+// 法抛出错误或者返回false，当前属性就无法被delete命令删除。
+// delete proxy._prop // Error: Invalid attempt to delete private "_prop" property
+
+// defineProperty() 拦截 Object.defineProperty()
+proxy.baz = 'bar' // 不会生效
+console.log(1, target) // 1 { _prop: 'foo', prop: 'foo' }
+
+// getOwnPropertyDescriptor() 拦截 Object.getOwnPropertyDescriptor(), 返回对象或者 undefined
+console.log(Object.getOwnPropertyDescriptor(proxy, 'wat')) // undefined
+console.log(Object.getOwnPropertyDescriptor(proxy, '_prop')) // undefined
+console.log(Object.getOwnPropertyDescriptor(proxy, 'prop'))
+// { value: 'foo', writable: true, enumerable: true, configurable: true }
+
+{
+  // getPrototypeOf() 拦截对象原型，返回值必须是对象或者null，否则报错
+  /* 具体包括
+    Object.prototype.__proto__
+    Object.prototype.isPrototypeOf()
+    Object.getPrototypeOf()
+    Reflect.getPrototypeOf()
+    instanceof
+  */
+
+  // isExtensible() 拦截 Object.isExtensible()操作
+
+  // ownKeys() 方法用来拦截对象自身属性的读取操作。
+  /* 具体包括
+  Object.getOwnPropertyNames()
+  Object.getOwnPropertySymbols()
+  Object.keys()
+  for...in循环 */
+}
+console.log(Object.keys(proxy)) // [ 'prop' ]
+
+// preventExtensions()方法拦截Object.preventExtensions() 返回一个布尔值，否则会被自动转为布尔值。
+// console.log(Object.preventExtensions(proxy)) // // Uncaught TypeError: 'preventExtensions' on proxy:
+// console.log(Object.isExtensible(proxy)) //true
+console.log(Object.preventExtensions(proxy)) // { _prop: 'foo', prop: 'foo' }
+
+// setPrototypeOf() 拦截 Object.setPrototypeOf() 只能返回布尔值，否则会被自动转为布尔值
+
+// Proxy.revocable() 返回一个可取消的 Proxy 实例
+// revoke 撤销  revocable 可撤销的
+/* Proxy.revocable()的一个使用场景是，目标对象不允许直接访问，
+必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。 */
+let target = {}
+let handler = {}
+let { proxy, revoke } = Proxy.revocable(target, handler)
+proxy.foo = 1213
+console.log(proxy.foo) // 1213
+revoke()
+console.log(proxy.foo) // TypeError: ... has been revoked
+
+// this 问题 Proxy 代理下，目标对象内部的 this 关键字会指向 Proxy 代理
+const target = {
+  m: function () {
+    console.log(this === proxy)
+  }
+}
+const handler = {}
+const proxy = new Proxy(target, handler)
+target.m() // false
+proxy.m() // true
+
+const _name = new WeakMap()
+class Person {
+  constructor(name) {
+    _name.set(this, name)
+  }
+  get name() {
+    return _name.get(this)
+  }
+}
+const jane = new Person('Jane')
+console.log(jane.name) // Jane
+
+const proxy = new Proxy(jane, {})
+console.log(proxy.name) // undefined  通过proxy.name访问时，this指向proxy, 导致无法取到值，所以返回undefine
+// 有些原生对象的内部属性，只有通过正确的 this 才能拿到，所以 Proxy 也无法代理这些原生对象的属性。
+const target = new Date();
+const handler = {};
+const proxy = new Proxy(target, handler);
+// getDate() 方法只能在 Date 对象实例上面拿到，如果 this 不是 Date 对象实例就会报错
+proxy.getDate(); // TypeError: this is not a Date object.
+// this 绑定原始对象，就可以解决这个问题。
+const target = new Date('2020-08-30')
+const handler = {
+  get(target, prop) {
+    if (prop === 'getDate') {
+      return target.getDate.bind(target)
+    }
+    if (prop === 'getMonth') {
+      return target.getMonth.bind(target)
+    }
+    return Reflect.get(target, prop)
+  }
+}
+const proxy = new Proxy(target, handler)
+console.log(proxy.getDate(), proxy.getMonth()) // 30 7
+
+// 实例 Web 服务的客户端  Proxy 对象可以拦截目标对象的任意属性
+const service = createWebService('http://example.com/data')
+service.employees().then(json => { // employees 雇员
+  const employees = JSON.parse(json)
+  // ...
+})
+function createWebService(baseUrl) {
+  return new Proxy({}, {
+    get(target, propKey, receiver) {
+      return () => httpGet(baseUrl + '/' + propKey)
+    }
+  })
+}
