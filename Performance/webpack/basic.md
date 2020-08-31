@@ -77,3 +77,64 @@ webpack-bundle-analyzer 指导代码
 1. [常用的 loader、plugin](https://www.jianshu.com/p/b43ff1bfa813)
 2. [loader 和 plugin 的区别](https://blog.csdn.net/jiang7701037/article/details/98887179)
 3. [更多区别](https://zhuanlan.zhihu.com/p/77342099)
+
+### Webpack 中引入文件的几种写法
+> Webpack支持以下规范
+> 1. CommonJS 规范
+```js
+// moduleA.js
+module.exports = function() {}
+// moduleB.js
+var moduleA = require('./moduleA')
+
+// 写法
+// 1. 同步
+var moduleA = require('./moduleA')
+moduleA.dosomething()
+
+// 2. 异步 require.ensure() 方法， a、b.js 被打包成同一个名为 'bundleFileName' 文件
+// 如果文件名称写成路径形式的话，webpack会按照指定路径进行打包生成
+require.ensure([], function(require) {
+  var a = require('./a')
+  a.dosomething()
+  var b = require('./b')
+  b.dosomething()
+}, 'bundleFileName')
+
+// 3. 预加载懒执行
+// a.js 会先被下载下来，直到出现 'require('./a')' 语句的时候才会执行
+require.ensure(['./a'], function(require) {
+  var a = require('./a')
+  a.dosomething()
+}, bundleFileName)
+```
+> 2. AMD 规范 (推崇依赖前置)
+```js
+define(['jquery', './math.js'], function($, math){
+  // AMD 是依赖前置，将文件的依赖通过数组的形式导入，然后当做函数的参数传递进函数使用
+
+  // 通过 return 来实现对外接口
+  return helloWorld
+})
+```
+> 3. CMD 规范 （推崇就近依赖，需要用到的时候再去加载模块）
+>> 标准语法： define(id?, deps?, factory)
+>> * 一个文件一个模块，所以经常用文件名作为模块 id
+>> * CMD 推崇依赖就近，所以一般不在 define 的参数中写依赖，在 factory 中写
+>> * factory 是一个函数，该函数拥有三个参数 function（require, exports, module）
+>>> 1. require：一个方法，接收模块标识，用来获取其它模块提供的接口
+>>> 2. exports：一个对象，用来向外提供模块接口
+>>> 3. module：一个对象，存储了与当前模块相关联的一些属性和方法
+```js
+define(function(require, exports, module){
+  var $ = require('jquery.js')
+})
+```
+> 4. ES6 规范 (使用import和exports命令来导入和导出文件)
+
+```js
+exports const a = function(){}
+// 写法
+import funcA from './moduleA'
+```
+

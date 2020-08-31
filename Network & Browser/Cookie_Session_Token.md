@@ -1,8 +1,8 @@
-// 你真的了解 Cookie 和 Session 吗 https://juejin.im/post/5cd9037ee51d456e5c5babca
-// 聊一聊session和cookie https://juejin.im/post/5aede266f265da0ba266e0ef
+[你真的了解 Cookie 和 Session 吗](https://juejin.im/post/5cd9037ee51d456e5c5babca)
+[聊一聊session和cookie](https://juejin.im/post/5aede266f265da0ba266e0ef)
 
-// Cookie属性
-`
+### Cookie属性
+
 Cookie属性
 
 name
@@ -52,11 +52,10 @@ HttpOnly属性是用来限制非HTTP协议程序接口对客户端Cookie进行�
 
 
 上述的这些属性，除了name与value属性会被提交外，其他的属性对于客户端来说都是不可读的，也是不可被提交的。
-`
 
-// Cookie 和 Session 有什么不同？
-`
-Cookie 和 Session 有什么不同？
+
+### Cookie 和 Session 有什么不同？
+
 
 作用范围不同，Cookie 保存在客户端（浏览器），Session 保存在服务器端。
 存取方式的不同，Cookie 只能保存 ASCII，Session 可以存任意数据类型，
@@ -66,11 +65,10 @@ Cookie 和 Session 有什么不同？
 隐私策略不同，Cookie 存储在客户端，比较容易遭到不法获取，早期有人将用户的登录名和密码存储在 Cookie 中导致信息被窃取；
   Session 存储在服务端，安全性相对 Cookie 要好一些。
 存储大小不同， 单个 Cookie 保存的数据不能超过 4K，Session 可存储数据远高于 Cookie
-`
 
-// 为什么需要 Cookie 和 Session，他们有什么关联？
-// https://user-gold-cdn.xitu.io/2019/5/13/16aafb5d90f398e2?imageslim
-`
+
+### [为什么需要 Cookie 和 Session，他们有什么关联？](https://user-gold-cdn.xitu.io/2019/5/13/16aafb5d90f398e2?imageslim)
+
 用户第一次请求服务器的时候，服务器根据用户提交的相关信息，创建创建对应的 Session ，
 请求返回时将此 Session 的唯一标识信息 SessionID 返回给浏览器，浏览器接收到服务器返回的 SessionID 信息后，
 会将此信息存入到 Cookie 中，同时 Cookie 记录此 SessionID 属于哪个域名。
@@ -82,4 +80,8 @@ Cookie 和 Session 有什么不同？
 如果找到 Session 证明用户已经登录可执行后面操作。
 根据以上流程可知，SessionID 是连接 Cookie 和 Session 的一道桥梁，
 大部分系统也是根据此原理来验证用户登录状态。
-`
+
+[Web 开发必须掌握的三个技术：Token、Cookie、Session](https://zhuanlan.zhihu.com/p/171787680)
+### Cookie
+### Session
+### Token
