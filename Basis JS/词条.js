@@ -145,6 +145,58 @@ MDN 对闭包的定义为： 闭包是指那些能够访问自由变量的函数
 `
 
 // 原型 原型链 https://github.com/mqyqingfeng/Blog/issues/2
+
+`
+1. prototype： 每个函数都有一个 prototype 属性，prototype 是函数才会有的属性.
+2. __proto__： 这是每一个 JavaScript 对象(除了 null )都具有的一个属性，叫 __proto__，这个属性会指向该对象的原型.
+3. constructor： 每个原型都有一个 constructor 属性指向关联的构造函数.
+4. 原型对象: 原型对象就是通过 Object 构造函数生成的，结合之前所讲，实例的 __proto__ 指向构造函数的 prototype. 可以得到下图第二部分
+5. 原型链： JavaScript对象通过__proto__ 指向父类对象，直到指向Object对象为止，这样就形成了一个原型指向的链条, 即原型链.
+`
+`
+                 ---- prototype --->
+                ^                   |
+                |                   V
+1. 构造函数 Person                   Person.prototype (实例原型)
+            |   |                   |   ^    |
+            |    <- constructor  --     |    |
+            |                           |    |
+            V                           |    |
+          person --- a. __proto__  ---       |  b. __proto__
+                                             |
+                                             |
+                 --- prototype -->           |
+                ^                 |          |
+                |                 V          V
+      2. Object()                 Object.prototype
+                |                 |          |
+                <- constructor  --           | c. __proto__
+                                             |
+                                             V
+                                            null
+
+    图中由相互关联的原型组成的链状结构就是原型链，就是 a -> b -> c
+`
+// 第一部分
+function Person() {}
+var person = new Person()
+console.log(person.__proto__ === Person.prototype) // true
+console.log(Person === Person.prototype.constructor) // true
+console.log(Object.getPrototypeOf(person) === Person.prototype) // true
+// 第二部分
+// 原型对象就是通过 Object 构造函数生成的
+var obj = new Object()
+obj.name = 'qkr001'
+console.log(obj.__proto__ === Object.prototype) // true
+console.log(Object === Object.prototype.constructor) // true
+console.log(Object.prototype.__proto__ === null) // true
+
+// 什么是原型呢？
+`
+你可以这样理解：每一个JavaScript对象(null除外)在创建的时候就会与之关联另一个对象，
+这个对象就是我们所说的原型， 每一个对象都会从原型"继承"属性。
+`
+
 `
 1.原型对象和构造函数有何关系？
 在JavaScript中，每当定义一个函数数据类型(普通函数、类)时候，都会天生自带一个prototype属性，这个属性指向函数的原型对象。
@@ -173,7 +225,7 @@ https://user-gold-cdn.xitu.io/2019/10/20/16de955ca89f6091?imageView2/0/w/1280/h/
 第二种是使用 isPrototypeOf() 方法, 同样只要是原型链中出现过的原型, isPrototypeOf() 方法就会返回true.
 console.log(Parent.prototype.isPrototypeOf(instance))
 `
-// 拓展
+// 拓展 './Classic JS/Class.js|Class&继承.js'
 // 继承 -> Class -> new 
 
 // 对比及解释 WebSocket  Web Workers   Service Worker
