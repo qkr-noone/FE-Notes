@@ -454,3 +454,151 @@
     })
   }
 }
+
+{
+  /* 
+  Iterator 和 for...of 
+   */
+  function makeIterator(array) {
+    var nextIndex = 0
+    return {
+      next: function(){
+        return nextIndex < array.length ?
+          {value: array[nextIndex++], done: false} :
+          {done: true}
+      }
+    }
+  }
+  var it = makeIterator([1, 2])
+  console.log(it.next()); // { value: 1, done: false }
+  console.log(it.next().value); // 2
+  console.log(it.next()); // { done: true }
+
+  const obj = {
+    [Symbol.iterator]: function() {
+      return {
+        next: function() {
+          return {
+            value: 1,
+            done: true
+          }
+        }
+      }
+    }
+  }
+  class RangeIterator {
+    constructor(start, stop) {
+      this.value = start
+      this.stop = stop
+    }
+    [Symbol.iterator]() {
+      return this
+    }
+    next() {
+      var value = this.value
+      if (value < this.stop) {
+        this.value++
+        return {done: false, value: value}
+      }
+      return {done: true, value: undefined}
+    }
+  }
+
+  function range(start, stop) {
+    return new RangeIterator(start, stop)
+  }
+
+  for (const value of range(0, 3)) {
+    console.log(value) // 0 1 2
+  }
+
+  // 通过遍历器实现指针结构的例子
+  function Obj(value) {
+    this.value = value
+    this.next = null
+  }
+  Obj.prototype[Symbol.iterator] = function () {
+    var iterator = {next: next}
+    var current = this
+
+    function next() {
+      if (current) {
+        var val = current.value
+        current = current.next
+        return {done: false, value: val}
+      } else {
+        { done: true}
+      }
+    }
+    return iterator
+  }
+
+  var one = new Obj(1)
+  var two = new Obj(2)
+  var three = new Obj(3)
+  one.next = two
+  two.next = three
+  console.log(one, two, three);
+  /*
+  Obj {
+    value: 1,
+    next: Obj { value: 2, next: Obj { value: 3, next: null } }
+  Obj { value: 2, next: Obj { value: 3, next: null } }
+  Obj { value: 3, next: null }
+  } */
+  for (const i of one) {
+    console.log(i); // 1 2 3
+  }
+
+  // 另一个为对象添加 Iterator 接口的例子
+  let obj = {
+    data: ['hello', 'world'],
+    [Symbol.iterator]() {
+      const self = this
+      let index = 0
+      return {
+        next() {
+          if (index < self.data.length) {
+            return { done: false, value: self.data[index++] }
+          } else {
+            return { done: true, value: undefined }
+          }
+        }
+      }
+    }
+  }
+  for (const v of obj) {
+    console.log(v) // hello world
+  }
+
+  // 类似数组 部署 Iterator 接口
+  NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator]
+  // or
+  NodeList.prototype[Symbol.iterator] = [][Symbol.iterator]
+  // 另一种
+  let iterable = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    length: 3,
+    [Symbol.iterator]: Array.prototype[Symbol.iterator]
+  }
+  for (const item of iterable) {
+    console.log(item); // a b c
+  }
+
+  // 解构赋值
+  let set = new Set().add(1).add('b').add('三')
+  let [x, y] = set
+  console.log(x, y); // 1 b
+  let [first, ...rest] = set
+  console.log(first, rest); // 1 [ 'b', '三' ]
+
+  // 扩展运算符
+  var str = 'asdf'
+  console.log([...str]); // [ 'a', 's', 'd', 'f' ]
+  let arr = ['b', 'c']
+  console.log(['a', ...arr, 'd']); // [ 'a', 'b', 'c', 'd' ]
+  
+  // yield*
+}
