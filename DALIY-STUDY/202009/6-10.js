@@ -243,4 +243,214 @@
   // 2
   // Error: fail
 
+  process.on('unhandledRejection', function (err, p) {
+    console.log(222222, err, p)
+    // 222222 ReferenceError: x is not defined 
+    // Promise { < rejected > ReferenceError: x is not defined }
+    throw err;
+  })
+  const someAsyncThing = function() {
+    return new Promise((resolve, reject) => {
+      resolve(x + 2)
+    })
+  }
+  someAsyncThing().then(() => console.log(333))
+  setTimeout(() => { console.log(123) }, 2000)
+  // 123
+  // UnhandledPromiseRejectionWarning: ReferenceError: x is not defined
+
+  const promise = new Promise((resolve, reject) => {
+    resolve('ok')
+    setTimeout(() => { throw new Error('test') }, 0)
+  })
+  promise.then((value) => { console.log(value) })
+  // ok
+  // Uncaught Error: test
+
+  someAsyncThing()
+    .catch(e => console.log('ooooee', e)) // ooooee ReferenceError: x is not defined
+    .then(() => console.log('nice')) //nice
+
+  // Promise.prototype.finall()
+  const pr1 = () => new Promise((resolve, reject) => {
+    console.log(1)
+    resolve()
+    // reject(2)
+  })
+  pr1().finally(() => console.log('finally')) // 1 finally
+
+  Promise.resolve(2).then(res => {console.log(res)})
+  // 2
+  // Promise {<fulfilled>: undefined} （resolved 的结果为 undefined）
+  Promise.resolve(2).finally(() => {console.log(123)})
+  // 123
+  // Promise {<fulfilled>: 2} (resolved 的结果为 2)
+  Promise.reject(3).then(() => { }, () => { })
+  // Promise {<fulfilled>: undefined} (reject 的值是 undefined)
+  Promise.reject(3).finally(() => { })
+  // Promise {<rejected>: 3} (reject 的值是 3)
+
+  // Promise.prototype.finally 的实现
+  Promise.prototype.finally = function(callback) {
+    let P = this.constructor
+    return this.then(
+      value => P.resolve(callback()).then(() => value),
+      reason => P.resolve(callback()).then(() => { throw reason })
+    )
+  }
+
+  // Promise.all()
+  const p1 = new Promise(resolve => {
+    resolve(1)
+  })
+  const p2 = new Promise(resolve => {
+    setTimeout(() => {
+      resolve(2)
+    }, 3000)
+  })
+  const p3 = new Promise((resolve, reject) => {
+    // resolve(3)
+    reject('bad')
+  })
+  Promise.all([p1, p2, p3])
+    .then(res => console.log(res)) // [ 1, 2, 3 ]
+    .catch(e => console.log(e)) // bad
+
+  // Promise.race()
+  Promise.race([p1, p2, p3])
+    .then(res => console.log(res)) // 1
+    .catch(e => console.log(e)) // bad
+
+  
+  // ES2020 Promise.allSettled()  9.7 Node 还不支持
+  const pros = Promise.allSettled([Promise.resolve(12), Promise.reject(33)])
+  pros.then(res => console.log(res))
+  /* 
+  (2) [{…}, {…}]
+    0: {status: "fulfilled", value: 12}
+    1: {status: "rejected", reason: 33}
+    length: 2
+    __proto__: Array(0)
+  */
+  // Promise {<fulfilled>: undefined}
+  const proMax = Promise.allSettled([p1, p2, p3])
+  proMax.then(res => console.log(res))
+  /*
+  (3) [{…}, {…}, {…}]
+    0: {status: "fulfilled", value: 1}
+    1: {status: "fulfilled", value: 2}
+    2: {status: "rejected", reason: "bad"}
+    length: 3
+    __proto__: Array(0)
+  */
+  // Promise {<fulfilled>: undefined}
+
+  // Promise.any() 9.7
+  Promise.any([p1, p2, p3]).then(res => console.log(res)) // 1
+  Promise.any([Promise.reject(33), p3]).then(res => console.log(res))
+  // AggregateError: All promises were rejected
+  // Promise {<fulfilled>: undefined}
+
+  // Promise.resolve() thenable 对象
+  let thenable = {
+    then (resolve, reject) {
+      // resolve(42)
+      reject(33)
+    }
+  }
+  Promise.resolve(thenable)
+    .then(res => console.log(res)) // 42
+    .catch(e => console.log(e)) // 33
+
+  // 让同步函数同步执行，异步函数异步执行
+  const f = () => {
+    console.log('now')
+    // return Promise.reject(33)
+  }
+  Promise.resolve().then(f)
+  console.log('next');
+  // next
+  // now
+
+  // 方法一
+  (async () => f())()
+    .then(res => console.log(1, res)) // 1 undefined
+    .catch(e => console.log(2, e)); // 2 33
+  console.log('next zero')
+  // next zero
+  // now
+
+  // 方法二
+  const f = () => console.log('now');
+  (
+    () => new Promise(resolve => resolve(f()))
+  )();
+  console.log('next max');
+  // now
+  // next max
+
+  // 方法三 Promise.try() 9.7 提案中 浏览器现在还未支持
+
+  // Promise API 的实现
+  // newAll
+  Promise.newAll = function (promiseArr){
+    let results = []
+    return new Promise((resolve, reject) => {
+      let n = 0
+      while (n < promiseArr.length) {
+        const temp = n
+        console.log('todo', temp, n)
+        promiseArr[temp].then(res => {
+          console.log(temp, res)
+          results[temp] = res
+          if (promiseArr.length === results.length) {
+            resolve(results)
+          }
+        }).catch(err => {
+          reject(err)
+        })
+        n++
+      }
+    })
+  }
+  
+  const p1 = new Promise(resolve => {
+    resolve(1)
+  })
+  const p2 = new Promise(resolve => {
+    // resolve(2)
+    setTimeout(() => {
+      resolve(2)
+    }, 3000)
+  })
+  const p3 = new Promise((resolve, reject) => {
+    resolve(3)
+    // reject('bad')
+  })
+  Promise.newAll([p1, p2, p3])
+    .then(res => console.log(80, res))
+    .catch(e => console.log(e))
+  // newAllSettled
+  Promise.newAllSettled = function(promiseArr) {
+    let results = []
+    return new Promise((resolve, reject) => {
+      let i = 0, n = 0
+      while (n < promiseArr.length) {
+        promiseArr[n].then(res => {
+          results.push({ status: 'fulfilled', value: res })
+          i++
+          if (i === promiseArr.length) {
+            resolve(results)
+          }
+        }).catch(err => {
+          results.push({ status: 'rejected', reason: err })
+          i++
+          if (i === promiseArr.length) {
+            resolve(results)
+          }
+        })
+        n++
+      }
+    })
+  }
 }
