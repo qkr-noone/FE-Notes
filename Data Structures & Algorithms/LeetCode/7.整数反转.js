@@ -9,29 +9,51 @@
  * @param {number} x
  * @return {number}
  */
-// var reverse = function(x) {
-//   // js 极值 存在问题
+var reverse = function(x) {
+  let MAX = Math.pow(2, 31) - 1
+  let MIN = Math.pow(-2, 31)
+  if (x < MIN || x > MAX) {
+    return 0
+  } else {
+    let val = 0,
+      temp = x < 0 ? Math.abs(x) : x
+    for (let i = temp; i >= 1; i = Math.floor(i / 10)) {
+      const pop = i % 10
+      if (val > MAX / 10 || (val === MAX / 10 && pop > 7)) {
+        return 0
+      }
+      if (val < MIN / 10 || (val === MIN / 10 && pop < -8)) {
+        return 0
+      }
+      val = val * 10 + pop
+    }
+    return x < 0 ? 0 - val : val
+  }
+};
+
+// 范围思路 https://leetcode-cn.com/problems/reverse-integer/solution/hua-jie-suan-fa-7-zheng-shu-fan-zhuan-by-guanpengc/
+// 链接：https://leetcode-cn.com/problems/reverse-integer/solution/7-zheng-shu-fan-zhuan-javascript-de-liang-chong-ji/
+// var reverse = function (x) {
+//   let ans = 0
+//   let value = Math.abs(x);
 //   let MAX = Math.pow(2, 31) - 1
 //   let MIN = Math.pow(-2, 31)
 //   if (x < MIN || x > MAX) {
 //     return 0
 //   } else {
-//     let val = 0,
-//       temp = x < 0 ? Math.abs(x) : x
-//     for (let i = temp; i >= 1; i = Math.floor(i / 10)) {
-//       val = val * 10 + i % 10
+//     while (value !== 0) {
+//       const pop = value % 10
+//       if (ans > MAX / 10 || (ans === MAX / 10 && pop > 7)) {
+//         return 0
+//       }
+//       if (ans < MIN / 10 || (ans === MIN / 10 && pop < -8)) {
+//         return 0
+//       }
+//       ans = ans * 10 + pop
+//       value = Math.floor(value / 10)
 //     }
-//     return x < 0 ? 0 - val : val
+//     return (x >= 0 ? ans : - ans)
 //   }
 // };
-// https://leetcode-cn.com/problems/reverse-integer/solution/wei-yun-suan-ji-jian-jie-fa-by-ijzqardmbd/
-var reverse = function (x) {
-  let result = 0;
-  while (x !== 0) {
-    result = result * 10 + x % 10;
-    x = (x / 10) | 0; // 运算符规则
-  }
-  return (result | 0) === result ? result : 0;
-};
 // @lc code=end
 
