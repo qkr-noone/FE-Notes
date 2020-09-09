@@ -816,4 +816,133 @@
   console.log(['a', ...arr, 'd']); // [ 'a', 'b', 'c', 'd' ]
   
   // yield*
+  let generator = function* () {
+    yield 1;
+    yield * [2, 3, 4];
+    yield 5;
+  }
+  var iterator = generator()
+  console.log(iterator.next());
+  console.log(iterator.next(), iterator.next(), iterator.next());
+  console.log(iterator.next());
+  console.log(iterator.next());
+  // 其他场合
+  /* 
+  for...of
+  Array.from()
+  Map(), Set(), WeakMap(), WeakSet()
+  Promise.all()
+  Promise.race()
+   */
+
+  var someString = 'hi'
+  console.log(typeof someString[Symbol.iterator]); //function
+
+  var iterator = someString[Symbol.iterator]()
+  console.log(iterator.next());
+  console.log(iterator.next());
+  console.log(iterator.next());
+  /* 
+  { value: 'h', done: false }
+  { value: 'i', done: false }
+  { value: undefined, done: true }
+   */
+  var str = new String('hi')
+  console.log([...str]); // [ 'h', 'i' ]
+  str[Symbol.iterator] = function () {
+    return {
+      next: function () {
+        if (this._first) {
+          this._first = false
+          return {value: 'bye', done: false}
+        } else {
+          return { done: true }
+        }
+      },
+      _first: true
+    }
+  }
+  console.log([...str]); // [ 'bye' ]
+  console.log(str); // [String: 'hi'] { [Symbol(Symbol.iterator)]: [Function] }
+
+  // Symbol.iterator方法的最简单实现
+  let myIterable = {
+    [Symbol.iterator]: function *() {
+      yield 1
+      yield 2
+      yield 3
+    }
+  }
+  console.log([...myIterable]); // [ 1, 2, 3 ]
+  let obj = {
+    *[Symbol.iterator]() {
+      yield 'hello';
+      yield 'world';
+    }
+  };
+
+  for (let x of obj) {
+    console.log(x);
+  }
+
+  // 遍历器对象的 return() throw()
+  function readLinesSync(file) {
+    return {
+      [Symbol.iterator]() {
+        return {
+          next() {
+            return {done: false}
+          },
+          return() {
+            file.close()
+            return {done: true}
+          }
+        }
+      }
+    }
+  }
+  // break;
+  // throw new Error();
+  // 都会触发执行 return
+  // 注意，return方法必须返回一个对象，这是 Generator 规格决定的。
+  // for...of循环可以使用的范围包括数组、Set 和 Map 结构、
+  // 某些类似数组的对象（比如arguments对象、DOM NodeList 对象）、(注意对象类数组报错 {length:1, 0: 'a'} 不可以使用)
+  // 后文的 Generator 对象，以及字符串。
+
+  var engines = new Set(['Gecko', 'Trident', 'Webkit', 'Webkit'])
+  for (const e of engines) {
+    console.log(e);
+  }
+  var es6 = new Map()
+  es6.set('edtition', 6)
+  es6.set('committee', 'TC39')
+  es6.set('standard', 'ECMA-262')
+  for (const [name, value] of es6) {
+    console.log(name + ':' + value);
+    // edtition:6
+    // committee: TC39
+    // standard: ECMA-262
+  }
+  for (let x of 'a\uD83D\uDC0A') {
+    console.log(x);
+    /* 
+    a
+    🐊
+     */
+  }
+}
+
+{
+  function Wrapper(func) {
+    return function(...args) {
+      const generator = func(...args)
+      generator.next()
+      return generator
+    }
+  }
+  const print = Wrapper(function*() {
+    console.log(`First Input: ${yield}`);
+    return 'done'
+  })
+  print().next('hello')
 }
