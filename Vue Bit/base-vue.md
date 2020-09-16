@@ -48,6 +48,7 @@ Proxy 与 Object.defineProperty对对象/对象的属性进行“劫持”，在
 ### Vue 中 Object.defineProperty 缺陷
 1. Object.defineProperty 只能对遍历过对象属性直接修改，无法监听对象
 2. Object.defineProperty 只能劫持对象的属性,因此我们需要对每个对象的每个属性进行遍历
+3. 无法监控到数组的变化，通过数组的下标给数组设置值，不能实时响应。
 
 Vue 只针对了以上八种方法进行了hack处理,所以其他数组的属性也是检测不到的，还是具有一定的局限性
 Vue 监听 push() pop() shift() unshift() splice() sort() reverse() 实现
