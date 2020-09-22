@@ -42,3 +42,47 @@ function* sleep(ms) {
   })
 }
 sleep(500).next().value.then(() => { console.log(2222) })
+
+
+// recode 9.22
+// while
+function sleep(ms) {
+  const start = Date.now(), expire = start + ms
+  while (Date.now() < expire) {}
+  console.log(110)
+  return
+}
+sleep(5000)
+
+// Promise
+function sleep(ms) {
+  return new Promise((resolve) => {
+    console.log(100)
+    setTimeout(resolve, ms)
+  })
+}
+sleep(1500).then(() => {
+  console.log(200)
+})
+
+// await/sync
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+async function test() {
+  const temp = await sleep(1900)
+  console.log(120)
+  return temp
+}
+test()
+
+// Generator
+function* sleep(ms) {
+  yield new Promise((resolve, reject) => {
+    console.log(12323);
+    setTimeout(resolve, ms)
+  })
+}
+sleep(1200).next().value.then(() => {console.log(232323)})

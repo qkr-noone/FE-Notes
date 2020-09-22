@@ -1,4 +1,8 @@
 // 描述一下 V8 执行一段JS代码的过程 参考 https://juejin.im/post/5dd8b3a851882572f56b578f#heading-6
+// https://juejin.im/post/6844904186165870606
+// https://juejin.im/post/6844903615300108302
+// https://juejin.im/post/6844903833571688462
+// https://juejin.im/post/6844903990073753613
 `
 简述
 机器是读不懂 JS 代码，机器只能理解特定的机器码，那如果要让 JS 的逻辑在机器上运行起来，就必须将 JS 的代码翻译成机器码，
