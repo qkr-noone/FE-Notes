@@ -162,6 +162,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
 Promise.prototype.catch = function (onRejected) {
   return this.then(null, onRejected)
 }
+// 测试脚本
 Promise.deferred = Promise.defer = function () {
   var dfd = {}
   dfd.promise = new Promise(function (resolve, reject) {

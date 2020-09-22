@@ -142,3 +142,5 @@ import funcA from './moduleA'
 ***2020.9.9 实践基于 Webpack 4.28.2 版本***
 [第一版: Vue项目Webpack优化实践，构建效率提高50%](https://github.com/fengshi123/blog/issues/2)
 [Webpack 4.28.2 版: Webpack 再深入再总结 ](https://github.com/fengshi123/blog/issues/18)
+
+[2020年了,再不会webpack敲得代码就不香了(近万字实战)](https://zhuanlan.zhihu.com/p/99959392)

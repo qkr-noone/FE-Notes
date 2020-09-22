@@ -89,3 +89,5 @@ class Promise {
     return promise2
   }
 }
+
+// JSError 错误日志
