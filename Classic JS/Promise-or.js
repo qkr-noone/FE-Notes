@@ -43,3 +43,25 @@ let p3 = new Promise((resolve, reject) => {
 Promise.or([p1, p2, p3]).then(res => {
   console.log(res) // 2
 }).catch(e => console.log('error', e))
+
+// recode 9.23
+Promise.orAlpha = function(promises) {
+  return new Promise((resolve, reject) => {
+    if (typeof promises[Symbol.iterator] !== 'function') {
+      return reject(promises + ' is not iterable')
+    }
+    let i = 0, len = promises.length
+    if (len === 0) return
+    while (i <= len) {
+      promises[i].then(res => {
+        resolve(res)
+      }).catch(e => {
+        if (i === len - 1) {
+          reject(e)
+        } else {
+          i++
+        }
+      }) 
+    }
+  })
+}

@@ -126,7 +126,7 @@ let MyApp = {
     console.log(this.name)
   }
 }
-let Msd = (function (val) {
+let Msd = (function () {
   var _name = 'app'
   return {
     getName: function () {
@@ -134,6 +134,77 @@ let Msd = (function (val) {
     }
   }
 })();
-var f = new Msd('a')
-var g = new Msd('b')
-console.log(a === b)
+console.log(Msd)
+
+// 惰性单例
+// 惰性单例是指在需要的时候才创建
+// 🌰：调用render方法，创建A对象，可以多次调用render方法，A对象是单例的
+
+var createA = (function() {
+  var instance;
+  return function () {
+    if (!instance) {
+      instance = 'A'
+    }
+    return instance
+  }
+})()
+function render() {
+  createA()
+  console.log('b');
+}
+render()
+render()
+
+function getSingleton(fn) {
+  var result;
+  return function() {
+    return result||(result = fn.apply(this, arguments))
+  }
+}
+var createA = function () {
+  var instance;
+  if (!instance) {
+    instance = 'A'
+  }
+  return instance
+}
+var createB = function () {
+  var instance;
+  if (!instance) {
+    instance = 'B'
+  }0                                                   
+  return instance
+}
+var createASingle = getSingleton(createA)
+var createBSingle = getSingleton(createB)
+function render() {
+  createASingle()
+  createBSingle()
+}
+render()
+render()
+/* 
+小结
+单例模式用到了闭包和高阶函数的特性。单例模式是简单但常用到的模式，
+比如单页应用、websocket连接等等。特别是惰性单例模式，用到时才创建，
+再次用到是不需要再次创建。创建对象和管理单例的职责分布在不同的方法中，方便扩展和管理。
+ */
+
+// 代理模式
+// 计算缓存器代理模式
+function sum(a, b) {
+  return a + b
+}
+let proxySum = (function() {
+  let cache = {}
+  return function() {
+    let args = Array.prototype.join.call(arguments, ',')
+    if (args in cache) {
+      return cache[args]
+    }
+
+    cache[args] = sum.apply(this, arguments)
+    return cache[args]
+  }
+})()
