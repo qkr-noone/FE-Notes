@@ -101,3 +101,27 @@ const p6 = Promise.resolve()
 Promise.newAll([p1, p2, p3, p4, p5, p6])
   .then(res => console.log(80, res)) // 80 [ 1, 2, 3, 4, 'p5', undefined ]
   .catch(e => console.log(e)) // bad
+
+// 9.24 recode
+Promise.alphaAll = function(promises) {
+  return new Promise((resolve, reject) => {
+    if (typeof promises[Symbol.iterator] !== 'function') {
+      return reject(new TypeError(promises + ' is not iterable'))
+    }
+    let result = [], index = 0, len = promises.length
+    if (len === 0) {
+      return resolve(result)
+    }
+    for (let i = 0; i < len; i++) {
+      Promise.resolve(promises[i]).then(data => {
+        result[i] = data
+        index++
+        if (index === len) {
+          resolve(result)
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    }
+  })
+}

@@ -40,19 +40,19 @@ let p3 = new Promise((resolve, reject) => {
   console.log('p3')
   reject(3)
 })
-Promise.or([p1, p2, p3]).then(res => {
-  console.log(res) // 2
-}).catch(e => console.log('error', e))
+// Promise.or([p1, p2, p3]).then(res => {
+//   console.log(res) // 2
+// }).catch(e => console.log('error', e))
 
 // recode 9.23
 Promise.orAlpha = function(promises) {
   return new Promise((resolve, reject) => {
     if (typeof promises[Symbol.iterator] !== 'function') {
-      return reject(promises + ' is not iterable')
+      return reject(new TypeError(promises + ' is not iterable'))
     }
     let i = 0, len = promises.length
     if (len === 0) return
-    while (i <= len) {
+    function help(resolve, reject) {
       promises[i].then(res => {
         resolve(res)
       }).catch(e => {
@@ -60,8 +60,14 @@ Promise.orAlpha = function(promises) {
           reject(e)
         } else {
           i++
+          help(resolve, reject, i)
         }
-      }) 
+      })
     }
+    help(resolve, reject)
   })
 }
+
+Promise.orAlpha([p1, p2, p3]).then(res => {
+  console.log(res) // 2
+}).catch(e => console.log('error', e))
