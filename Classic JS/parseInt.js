@@ -37,7 +37,7 @@ function _parseInt(str, radix) {
   // 解析数字+字符 => 只解析数字  -> 整数值
 
   // 正则匹配[+|-]?[0]?[Xx]?[0-9a-fA-F]+
-  const regex = /^(?<fuhao>[\+|\-]*)(?<radix>[0]?[Xx]?)(?<num>[0-9a-fA-F]+)/
+  const regex = /^(?<fuhao>[\+|\-]*)(?<num>[0-9a-fA-F]+)/
 
   // 匹配出符号、进制、数字三个分组
   const groups = str.match(regex).groups
@@ -57,7 +57,7 @@ function _parseInt(str, radix) {
     else num = charCode - 48
 
     // 当实际数字大于radix时, 无法解析则停止字符串遍历
-    if (num > radix) {
+    if (num >= radix) {
       break
     } else {
       arr.push(num)
@@ -72,6 +72,64 @@ function _parseInt(str, radix) {
     res += Math.floor(arr[length - i - 1]) * Math.pow(radix, i)
   }
 
-  return res;
+  return res * (groups.fuhao === '-' ? -1 : 1);
 }
-console.log(_parseInt('12b', 36))
+console.log(_parseInt('-12b', 36))
+
+// 9.25 recode
+function _parseIntAlpha(str, radix) {
+  let str_type = typeof str
+  let res = 0
+  if (str_type !== 'string' && str_type !== 'number') {
+    return NaN
+  }
+
+  // 字符串处理
+  str = String(str).trim().split('.')[0]
+  let length = str.length
+  if (!length) {
+    return NaN
+  }
+
+  if (!radix) {
+    radix = 10
+  }
+
+  if (typeof radix !== 'number' || radix < 2 || radix > 36) {
+    return NaN
+  }
+
+  const regex = /^(?<fuhao>[\+|\-]*)(?<num>[0-9a-fA-F]+)/
+  const groups = str.match(regex).groups
+  let splitArr = groups.num.split('')
+  const arr = []
+  for (let i = 0; i < splitArr.length; i++) {
+    const charCode = splitArr[i].toUpperCase().charCodeAt();
+    let num
+
+    if (charCode >= 65) {
+      num = charCode - 55
+    } else {
+      num = charCode - 48
+    }
+
+    if (num >= radix) {
+      break
+    } else {
+      arr.push(num)
+    }
+  }
+  length = arr.length
+  if (!length) {
+    return NaN
+  }
+
+  for (let i = 0; i < length; i++) {
+    res += Math.floor(arr[length - i - 1]) * Math.pow(radix, i)
+  }
+
+  return res * (groups.fuhao === '-' ? -1 : 1)
+}
+console.log(_parseIntAlpha('-12b', 16)) // -299
+console.log(_parseIntAlpha('-12', 5)) // -7
+console.log(_parseIntAlpha('112', 2)) // -3
