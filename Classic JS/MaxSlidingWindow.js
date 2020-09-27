@@ -33,3 +33,32 @@ let maxSliding = function (nums, k) {
     if (i >= k - 1) res.push(nums[range[0]])
   }
 }
+
+// 9.27 recode
+// 超出时间限制
+let maxSlidingAlpha = function (nums, k) {
+  let res = [], range = []
+  if (nums === null || nums.length === 1) {
+    return nums
+  }
+  if (nums.length === 0 || !k) return []
+  for (let i = 0; i < nums.length; i++) {
+    if (i < k - 1) {
+      range.push(nums[i])
+    } else {
+      if (i === k - 1) {
+        range.push(nums[i])
+        res.push(Math.max(...range))
+      } else {
+        range.push(nums[i])
+        range.shift()
+        res.push(Math.max(...range))
+      }
+    }
+  }
+  return res
+}
+
+var nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+
+console.log(maxSlidingAlpha(nums, k));
