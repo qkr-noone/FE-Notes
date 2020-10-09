@@ -148,11 +148,11 @@ var name = 'second'
 var funA = thisA.describe
 console.log(0, funA())
 
-// instanceof 运算符用来测试赛一个对象在其原型链中是否存在一个构造函数的 prototype 属性， 但它不能检测 null 和 undefined
+// instanceof 运算符用来测试一个对象在其原型链中是否存在一个构造函数的 prototype 属性， 但它不能检测 null 和 undefined
 console.log([] instanceof Array)
 console.log([] instanceof Object)
 console.log(new Date() instanceof Date)
-console.log(undefined instanceof undefined)
+console.log(undefined instanceof Object)
 console.log(new RegExp() instanceof RegExp)
 
 // 类数组转换为数组 可以调用数组原生方法
