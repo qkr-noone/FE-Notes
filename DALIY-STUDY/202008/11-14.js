@@ -271,7 +271,7 @@ a.x = a = { n: 2 };
 console.log(a.x)  // undefined
 console.log(b.x) // { n: 2 }
 
-
+// https://muyiy.cn/question/js/46.html
 // 输出以下代码执行的结果并解释为什么 详细
 var obj = {
   '2': 3,
