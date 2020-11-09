@@ -271,6 +271,16 @@ function connectWebSocket () {
 connectWebSocket()
 
 `Web Worker
+
+  JS是单线程没有多线程，当JS在页面中运行长耗时同步任务的时候就会导致页面假死影响用户体验，
+  从而需要设置把任务放在任务队列中；执行任务队列中的任务也并非多线程进行的，
+  然而现在HTML5提供了我们前端开发这样的能力 - Web Workers API
+
+  Web Workers 使得一个Web应用程序可以在与主执行线程分离的后台线程中运行一个脚本操作。
+  这样做的好处是可以在一个单独的线程中执行费时的处理任务，
+  从而允许主（通常是UI）线程运行而不被阻塞。
+
+  [前端如何处理十万级别的大量数据](https://juejin.im/post/6844903821278199822)
   https://juejin.im/post/6844903638431694862
   https://juejin.im/post/6844903736238669837
   http://www.ruanyifeng.com/blog/2018/07/web-worker.html

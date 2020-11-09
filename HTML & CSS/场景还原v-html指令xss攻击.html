@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <style>
+        .demo {
+            font-family: sans-serif;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            padding: 20px 30px;
+            margin-top: 1em;
+            margin-bottom: 40px;
+            user-select: none;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body id="hello-vue">
+    <div class="demo">
+        {{ message }}
+    </div>
+    <div v-html="html"></div>
+    <p>v-html指令最终调用的是innerHTML方法将指令的value插入到对应的元素里。这就是造成xss攻击的‘漏洞’了。</p>
+    <a href="https://www.freesion.com/article/5389589953/">解决V-HTML指令潜在的XSS攻击</a>
+    <script>
+        const HelloVueApp = {
+            data() {
+                return {
+                    message: '运行之后由于src地址对应的资源找不到，会触发img标签的error事件，最终alert弹框。这便是一个最简单的xss攻击。',
+                    html: '<img src="http://www.baidu.com" onerror="alert(1)">'
+                }
+            }
+        }
+
+        Vue.createApp(HelloVueApp).mount('#hello-vue')
+    </script>
+</body>
+</html>

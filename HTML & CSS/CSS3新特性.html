@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CSS3 新特性</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <!-- 
     transition：过渡
     transform：旋转、缩放、移动或者倾斜
@@ -13,11 +14,16 @@
     border-radius：圆角
    -->
   <style>
+    :root {
+      --theme-color-start: #5ba73d;
+      --theme-color-end: #0eeb6a;
+      /* #e1251b orange */
+    }
     .box {
       width: 100px;
       height: 100px;
       border-radius: 100%;
-      background: linear-gradient(#e1251b, orange);
+      background: linear-gradient(var(--theme-color-start), var(--theme-color-end));
       position: relative;
       transition: all 2s;
       animation: mymove 5s infinite;
@@ -39,5 +45,58 @@
 </head>
 <body>
   <div class="box"></div>
+  <h4 class="title">JS 动态换肤</h4>
+  <script type="text/javascript">
+  window.onload = function() {
+    setTimeout(() => {
+      // CSS 变量换肤
+      document.documentElement.style.setProperty("--theme-color-start", "#e1251b");
+      document.documentElement.style.setProperty("--theme-color-end", "orange");
+    }, 6000);
+    /* 动态换肤 */
+
+    // 1. 主题颜色配置
+    var colors = {
+      red: {
+        themeColor: '#FF0000'
+      },
+      blue: {
+        themeColor: '#0000FF'
+      }
+    }
+
+    // 2. 异步获取样式
+    var styles = ''
+    axios.get('theme.css').then((resp => {
+      const colorMap = {
+        '#FF0000': 'themeColor'
+      }
+      styles = resp.data
+      console.log(styles, 90);
+      Object.keys(colorMap).forEach(key => {
+        const value = colorMap[key]
+        styles = styles.replace(new RegExp(key, 'ig'), value)
+        console.log(styles, 100);
+      })
+      setTimeout(() => {
+        writeNewStyle(styles, colors.blue)
+      }, 4500);
+    }))
+
+    // 换色
+    function writeNewStyle(originalStyle, colors) {
+      let oldEl = document.getElementById('temp-style')
+      let cssText = originalStyle
+      Object.keys(colors).forEach(key => {
+        cssText = cssText.replace(new RegExp(key, 'ig'), colors[key])
+      })
+      const style = document.createElement('style')
+      style.innerText = cssText
+      style.id = 'temp-style'
+
+      oldEl ? document.head.replaceChild(style, oldEl) : document.head.appendChild(style)
+    }
+  }
+  </script>
 </body>
 </html>

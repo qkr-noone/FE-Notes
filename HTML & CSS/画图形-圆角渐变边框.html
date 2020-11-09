@@ -15,6 +15,7 @@
       background-image: linear-gradient(to right top, #ffcc00 50%, #eee 50%);
       background-size: 100% calc(100% - 100vh + 5px);
       background-repeat: no-repeat;
+      font-size: 50px;
     }
 
     body::after {
@@ -107,6 +108,31 @@
       margin: 10px 0;
       background: red;
     }
+    .red-inner {
+      margin: 10px;
+    }
+    .bfc2 {
+      overflow: auto;
+    }
+    .one, .two {
+      width: 60px;
+      height: 50px;
+      background-color: antiquewhite;
+      margin: 10px;
+      float: left;
+    }
+    .htest {
+      font-size: 40px;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    h3:nth-of-type(1) {
+      font-size: 18px;
+    }
+    * {
+      font-size: 12px;
+    }
   </style>
 
 <body>
@@ -127,6 +153,12 @@
   <div class="red-outer">
     <div class="red-inner">red inner</div>
   </div>
+  <div class="bfc2">
+    <div class="one"></div>
+    <div class="two"></div>
+  </div>
+  <h3 class="htest">one12</h3>
+  <h3>two12345</h3>
 </body>
 
 </html>
