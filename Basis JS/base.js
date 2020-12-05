@@ -91,7 +91,7 @@ function toArray(a, b) {
   let args = Array.prototype.slice.call(arguments)
   let arg2 = Array.from(arguments)
   let arg3 = [...arguments]
-  let arg4 = Array.prototype.concat.apply([], arguments) // applay 方法会把第二个参数展开
+  let arg4 = Array.prototype.concat.apply([], arguments) // apply 方法会把第二个参数展开
   console.log(args, arg2, arg3, arg4)
 }
 toArray(12, 2, 4, 90)

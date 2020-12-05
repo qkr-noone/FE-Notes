@@ -22,3 +22,10 @@
 * history 模式
 
 #### Virtual Dom (https://juejin.im/post/6844903615652610055)
+
+### 待查题目-解析
+  * B. 祖孙组件之间可以使用 provide 和 inject 方式跨层级相互传值 （错误）
+  * C. 若子组件使用 $emit('say') 派发事件，父组件可使用 @say 监听 （正确）
+  * C. 可通过 beforeEnter 对单个组件进行路由守卫 （错误）
+  * C. 可使用 this.$children 按顺序查找当前组件的直接子组件 （错误）
+  * C. v-model 是内置指令，不能用在自定义组件上 （错误）
