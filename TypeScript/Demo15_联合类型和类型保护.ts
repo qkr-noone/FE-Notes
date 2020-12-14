@@ -7,6 +7,11 @@ interface Teacher {
   skill: () => {};
 }
 
+// 所谓联合类型，可以认为一个变量可能有两种或两种以上的类型。
+function doSome (tko: Waiter | Teacher) {
+  // tko.service() // 报错
+}
+
 // 这些接口中都包含一个 service 属性，该属性被称为可辨识的属性
 function judge(animal: Waiter | Teacher) {
   // animal.skill() 报错

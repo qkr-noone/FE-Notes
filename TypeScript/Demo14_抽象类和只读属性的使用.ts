@@ -1,41 +1,43 @@
+/* 
+demo14 抽象类和只读属性的使用
+readonly 只读属性
+ */
+
 class Person {
-  constructor(public name: string) {}
+    public readonly _name: string
+    constructor(public name: string) {
+        this._name = name
+    }
 }
-const person = new Person('qkr')
-console.log(person.name);
 
-// 只读属性 readonly  修改会报错
-class Only {
-  public readonly _name: string;
-  constructor(name: string) {
-    this._name = name
-  }
-}
-const only = new Only('qkr001')
-console.log(only._name); // qkr001
-// only._name = 'qkkrrr' 报错
+const person = new Person('qkr qq')
 
-// 抽象类
+console.log(person.name) // qkr qq
+
+// 只读属性
+// person._name = '12' // TSError: '_name' because it is a read-only property.
+
 abstract class Girl {
-  abstract skill() :void
+    abstract skill() :void
 }
 
 class Waiter extends Girl {
-  skill() {
-    console.log('is waiter');
-  }
+    skill() {
+        // 业务逻辑不通
+        console.log('young')
+    }
 }
 
-class BaseTeacher extends Girl{
-  skill() {
-    console.log('is BaseTeacher')
-  }
+class BaseTeacher extends Girl {
+    skill() {
+        console.log('Base')
+    }
 }
 
-class seniorTeacher extends Girl{
-  skill() {
-    console.log('is seniorTeacher')
-  }
+class seniorTeacher extends Girl {
+    skill() {
+        console.log('Topic')
+    }
 }
 
 export{}
