@@ -1,0 +1,173 @@
+html {
+  font-size: calc(100vw / 7.5);
+  body {
+  	margin: 0;
+  	border: 0;
+  	div {
+  		box-sizing: border-box;
+  	}
+  	& > div {
+  		margin-bottom: 10px;
+  	}
+  }
+}
+.fullscreen-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 400px;
+  header {
+  	height: 50px;
+  	background-color: #f66;
+  }
+  footer {
+  	height: 50px;
+  	background-color: #66f;
+  }
+  main {
+  	flex: 1;
+  	background-color: #3c9;
+  }
+}
+
+.two-column-layout {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  .left {
+  	width: 100px;
+  	background-color: #f66;
+  }
+  .right {
+  	flex: 1;
+  	background-color: #66f;
+  }
+}
+
+.three-column-layout {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  .left {
+  	width: 50px;
+  	background-color: #f66;
+  }
+  .center {
+  	width: 100px;
+  	background-color: #66f;
+  }
+  .right {
+  	flex: 1;
+  	background-color: #3c9;
+  }
+}
+
+.grail-layout {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  .left {
+  	width: 100px;
+  	background-color: #f66;
+  }
+  .center {
+  	flex: 1;
+  	background-color: #3c9;
+  }
+  .right {
+  	width: 100px;
+  	background-color: #66f;
+  }
+}
+
+.average-column-layout {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  div {
+  	flex: 1;
+  }
+  .one {
+  	background-color: #f66;
+  }
+  .two {
+  	background-color: #66f;
+  }
+  .three {
+  	background-color: #f90;
+  }
+  .four {
+  	background-color: #09f;
+  }
+}
+
+.center-layout {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  background-color: #f66;
+  div {
+  	margin: auto;
+  	width: 100px;
+  	height: 100px;
+  	background-color: #66f;
+  }
+}
+
+.text-wrapping {
+  overflow: hidden;
+  width: 100%;
+  font-size: 20px;
+  color: #f66;
+  word-break: break-all;
+  img {
+  	float: left;
+  	margin: 5px 10px 5px;
+  	height: 200px;
+  }
+}
+
+.text-ellipsis {
+  width: 100%;
+  p {
+  	padding: 0 10px;
+  	line-height: 40px;
+  	text-align: justify;
+  	font-size: 20px;
+  	color: #fff;
+  	&.s-line {
+  		background-color: #f66;
+  	}
+  	&.m-line {
+  		background-color: #66f;
+  	}
+  }
+  .s-ellipsis {
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+  	white-space: nowrap;
+  }
+  // .m-ellipsis {
+  // 	display: -webkit-box;
+  // 	overflow: hidden;
+  // 	text-overflow: ellipsis;
+  // 	word-break: break-all;
+
+  // 	-webkit-box-orient: vertical;
+  // 	-webkit-line-clamp: 3;
+  // }
+  .m-ellipsis {
+  	overflow: hidden;
+  	position: relative;
+  	max-height: 120px;
+  	line-height: 40px;
+  	&::after {
+  		position: absolute;
+  		right: 0;
+  		bottom: 0;
+  		padding-left: 20px;
+  		background: linear-gradient(to right, transparent, rgba(245, 245, 245, .2) 50%);
+  		content: "...";
+  	}
+  }
+}
